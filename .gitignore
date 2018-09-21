@@ -9,3 +9,4 @@ data/
 logs/
 *.ipynb
 __pycache__
+.idea/*
