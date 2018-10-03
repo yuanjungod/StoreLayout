@@ -77,7 +77,7 @@ if __name__ == "__main__":
             print(lr)
             print(y)
             print(pred)
-            print(net(torch.unsqueeze(torch.FloatTensor([[1, 1, 2, 3, 4, 5, 6, 7, 8, 10]]), 0)))
+            print(net(torch.unsqueeze(torch.FloatTensor([[1, 3, 5, 7, 9, 10, 11, 12, 13, 14]]), 0)))
         #     with torch.no_grad():
         #         test_pred = net(x.view(-1, 1, 10))
         #         acc = (test_pred - y).sum().numpy() / test_pred.size()[0]
