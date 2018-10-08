@@ -3,6 +3,7 @@ import numpy as np
 import random
 import torch
 import datetime
+import os
 from lib.config import *
 
 random.seed(1)
@@ -26,7 +27,7 @@ class DataLoader(object):
 
     def load_csv(self, origin_csv_path, save_path=None):
 
-        self.clothing_property = pd.read_csv("/Users/happy/code/StoreLayout/data/clothing_property.csv")
+        self.clothing_property = pd.read_csv(os.getcwd() + "/../data/clothing_property.csv")
         for i in self.clothing_property.index:
             self.category_dict[i] = {
                 "name": self.clothing_property.loc[i][0],
@@ -43,7 +44,7 @@ class DataLoader(object):
                 "category": self.clothing_property.loc[i][4].split("/")
             }
 
-        self.display_clothing = pd.read_csv("/Users/happy/code/StoreLayout/data/display_clothering.csv", )
+        self.display_clothing = pd.read_csv(os.getcwd() + "/../data/display_clothering.csv", )
         for i in self.display_clothing.index:
             self.display_clothing_dict[self.display_clothing.loc[i][0]] = self.display_clothing.loc[i][1]
 
@@ -58,8 +59,10 @@ class DataLoader(object):
         self.etl_pd = self.etl_pd.fillna(0)
 
         self.result_pd = self.etl_pd.copy()
+        # self.result_pd = pd.DataFrame()
         self.encode_pd = self.etl_pd.copy()
-        print(self.result_pd)
+        # self.encode_pd = pd.DataFrame()
+        # print(self.result_pd)
         for i in self.etl_pd.index:
             for j in range(len(self.etl_pd.loc[i])):
                 category_info_list = list()
@@ -68,22 +71,20 @@ class DataLoader(object):
                 # print(category_info_list)
                 # print(set(self.name_dict.keys()))
                 common_set = set(category_info_list) & set(self.name_dict.keys())
-                if self.etl_pd.loc[i][j] in self.name_dict or len(list(common_set)) > 0:
-                    # self.etl_pd[i][j] = self.category_dict[self.etl_pd.loc[i][j]]
-                    self.result_pd.loc[i][j] = -1
-                    self.encode_pd.loc[i][j] = list()
-                    for m in str(self.etl_pd.loc[i][j]).split("/"):
-                        self.encode_pd.loc[i][j].append([self.name_dict[n]["index"] for n in m.split("&")])
-                elif self.etl_pd.loc[i][j] in entity_dict:
-                    # self.etl_pd[i][j] = entity_dict[self.etl_pd.loc[i][j]]
-                    self.result_pd.loc[i][j] = entity_dict[self.etl_pd.loc[i][j]]
-                    self.encode_pd.loc[i][j] = entity_dict[self.etl_pd.loc[i][j]]
+                if self.etl_pd.loc[(i, j)] in self.name_dict or len(list(common_set)) > 0:
+                    self.result_pd.loc[(i, j)] = -1
+
+                    self.encode_pd.at[i, j] = []
+                    for m in str(self.etl_pd.loc[(i, j)]).split("/"):
+                        self.encode_pd.loc[(i, j)].append([self.name_dict[n]["index"] for n in m.split("&")])
+                elif self.etl_pd.loc[(i, j)] in entity_dict:
+                    self.result_pd.at[i, j] = entity_dict[self.etl_pd.loc[i][j]]
+                    self.encode_pd.at[i, j] = entity_dict[self.etl_pd.loc[i][j]]
                 else:
-                    if isinstance(self.etl_pd.loc[i][j], str) and self.etl_pd.loc[i][j] != "0":
+                    if isinstance(self.etl_pd.loc[(i, j)], str) and self.etl_pd.loc[i][j] != "0":
                         print(self.etl_pd.loc[i][j], type(self.etl_pd.loc[i][j]))
-                    # self.etl_pd[i][j] = 0
-                    self.result_pd.loc[i][j] = 0
-                    self.encode_pd.loc[i][j] = 0
+                    self.result_pd.at[(i, j)] = 0
+                    self.encode_pd.at[(i, j)] = 0
 
     def generate_train_data(self, origin_csv_path):
         category_set = set()
@@ -163,8 +164,9 @@ class DataLoader(object):
 if __name__ == "__main__":
     # data_iter = DataLoader.data_generate1(10)
     # print(next(data_iter))
+    print(os.getcwd())
     dl = DataLoader()
-    dl.load_csv("/Users/happy/code/StoreLayout/data/details/仁寿.csv", "../data/云货架门店摆放etl.csv")
+    dl.load_csv(os.getcwd() + "/../data/details/仁寿.csv", "../data/云货架门店摆放etl.csv")
     print(dl.result_pd)
     print(dl.encode_pd)
 
