@@ -1,5 +1,5 @@
 import os
-from data_loader import DataLoader
+from .data_loader import DataLoader
 
 
 class BoxAnalyseStragy(object):
@@ -134,7 +134,6 @@ class BoxAnalyseStragy(object):
         for category in category_sort_info:
             category_sort_info[category].sort(key=lambda a: a[0], reverse=True)
         return box_analyse_result, category_sort_info
-
 
 
 if __name__ == "__main__":

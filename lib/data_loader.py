@@ -27,7 +27,7 @@ class DataLoader(object):
 
     def load_csv(self, origin_csv_path, save_path=None):
 
-        self.clothing_property = pd.read_csv(os.getcwd() + "/../data/clothing_property.csv")
+        self.clothing_property = pd.read_csv(os.getcwd() + "/data/clothing_property.csv")
         for i in self.clothing_property.index:
             self.category_dict[i] = {
                 "name": self.clothing_property.loc[i][0],
@@ -44,7 +44,7 @@ class DataLoader(object):
                 "category": self.clothing_property.loc[i][4].split("/")
             }
 
-        self.display_clothing = pd.read_csv(os.getcwd() + "/../data/display_clothering.csv", )
+        self.display_clothing = pd.read_csv(os.getcwd() + "/data/display_clothering.csv", )
         for i in self.display_clothing.index:
             self.display_clothing_dict[self.display_clothing.loc[i][0]] = self.display_clothing.loc[i][1]
 
