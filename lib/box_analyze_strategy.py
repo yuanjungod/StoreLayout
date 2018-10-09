@@ -133,6 +133,7 @@ class BoxAnalyseStragy(object):
                         box_analyse_result[i][j]["category"].values()), (i, j)])
         for category in category_sort_info:
             category_sort_info[category].sort(key=lambda a: a[0], reverse=True)
+
         return box_analyse_result, category_sort_info
 
 

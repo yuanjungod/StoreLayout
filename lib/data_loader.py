@@ -59,17 +59,12 @@ class DataLoader(object):
         self.etl_pd = self.etl_pd.fillna(0)
 
         self.result_pd = self.etl_pd.copy()
-        # self.result_pd = pd.DataFrame()
         self.encode_pd = self.etl_pd.copy()
-        # self.encode_pd = pd.DataFrame()
-        # print(self.result_pd)
         for i in self.etl_pd.index:
             for j in range(len(self.etl_pd.loc[i])):
                 category_info_list = list()
                 for k in str(self.etl_pd.loc[i][j]).split("/"):
                     category_info_list.extend(k.split("&"))
-                # print(category_info_list)
-                # print(set(self.name_dict.keys()))
                 common_set = set(category_info_list) & set(self.name_dict.keys())
                 if self.etl_pd.loc[(i, j)] in self.name_dict or len(list(common_set)) > 0:
                     self.result_pd.loc[(i, j)] = -1
