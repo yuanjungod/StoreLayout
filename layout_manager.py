@@ -10,16 +10,17 @@ class LayoutManager(object):
     def __init__(self):
         self.box_analyse = BoxAnalyseStragy()
         self.category_sort_info = dict()
+        print("分析中...")
         self.box_analyse_result, category_sort_info = self.box_analyse.analyse(
             os.getcwd() + "/data/details/", 4)
         self.data_loader = DataLoader()
         for i in self.box_analyse_result:
             for j in self.box_analyse_result[i]:
                 self.box_analyse_result[i][j]['date'].sort(reverse=True)
-                print("date", i, j, self.box_analyse_result[i][j]['date'])
-                print("season", i, j, self.box_analyse_result[i][j]['season'])
-                print("sex", i, j, self.box_analyse_result[i][j]['sex'])
-                print("category", i, j, self.box_analyse_result[i][j]['category'])
+                # print("date", i, j, self.box_analyse_result[i][j]['date'])
+                # print("season", i, j, self.box_analyse_result[i][j]['season'])
+                # print("sex", i, j, self.box_analyse_result[i][j]['sex'])
+                # print("category", i, j, self.box_analyse_result[i][j]['category'])
         for i in category_sort_info:
             self.category_sort_info[i] = dict()
             a_sum = sum([k[0] for k in category_sort_info[i]])
@@ -28,9 +29,9 @@ class LayoutManager(object):
                 if item[1][0] not in self.category_sort_info[i]:
                     self.category_sort_info[i][item[1][0]] = dict()
                 self.category_sort_info[i][item[1][0]][item[1][1]] = item[0]
-        for i in self.category_sort_info:
-            for j in self.category_sort_info[i]:
-                print(i, j, self.category_sort_info[i][j])
+        # for i in self.category_sort_info:
+        #     for j in self.category_sort_info[i]:
+        #         print(i, j, self.category_sort_info[i][j])
 
     @classmethod
     def section_choose(cls, position, result_pd):
@@ -54,7 +55,6 @@ class LayoutManager(object):
         if rank > len(clothing):
             best_one = clothing[-1]
         else:
-            print(clothing, rank)
             best_one = clothing[rank]
 
         if best_one["count"] > 1:
@@ -69,7 +69,6 @@ class LayoutManager(object):
         total_cell = 0
         for i in self.data_loader.result_pd.index:
             for j in range(len(self.data_loader.result_pd.loc[i])):
-                print(i, j, self.data_loader.encode_pd.shape, self.data_loader.result_pd.shape, len(self.data_loader.result_pd.loc[i]))
                 if self.data_loader.result_pd.at[i, j] == -1:
                     a = self.data_loader.encode_pd.at[i, j]
                     for k in a:
@@ -81,7 +80,6 @@ class LayoutManager(object):
         if sum(layout.data_loader.display_clothing_dict.values()) != total_cell:
             print("可以摆放%s个单元格，提供了%s单元格服装,需要调整" % (total_cell, sum(layout.data_loader.display_clothing_dict.values())))
             exit()
-        cash_orientation = BoxAnalyseStragy.get_value_index_column(self.data_loader.result_pd, 10009)
         boy_clothing = list()
         girl_clothing = list()
         for key, value in layout.data_loader.display_clothing_dict.items():
@@ -95,9 +93,7 @@ class LayoutManager(object):
         boy_clothing.sort(key=lambda a: a["date"], reverse=True)
         girl_clothing.sort(key=lambda a: a["date"], reverse=True)
 
-        print("boy_clothing", boy_clothing)
-        print("girl_clothing", girl_clothing)
-        print("layout begin!!!!")
+        print("layout begin...")
 
         for i in range(len(self.data_loader.result_pd.loc[0])):
             index_length = len(self.data_loader.result_pd.index)-1
@@ -106,15 +102,12 @@ class LayoutManager(object):
                     continue
                 section = self.section_choose([index_length-j, i], self.data_loader.result_pd)
                 result_list = self.data_loader.encode_pd.at[index_length-j, i]
-                print(result_list)
                 for k in range(len(result_list)):
                     if isinstance(result_list[k], list):
                         for h in range(len(result_list[k])):
-                            print(index_length-j, i)
                             result_list[k][h] = self.get_choose_best(section, boy_clothing, girl_clothing, 0)
 
                     else:
-                        print(index_length-j, i)
                         result_list[k] = self.get_choose_best(section, boy_clothing, girl_clothing, 0)
                 self.data_loader.result_pd.at[index_length-j, i] = result_list
 
