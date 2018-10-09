@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5f69cc22-92d2-4390-88c1-dfeea483be6e" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/line_ucb.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/clothing_property.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/clothing_property.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/display_clothering.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/display_clothering.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/layout_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/layout_manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/box_analyze_strategy.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/box_analyze_strategy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data_loader.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -64,29 +58,11 @@
       <file leaf-file-name="layout_manager.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/layout_manager.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="178">
-              <caret line="99" column="45" selection-start-line="99" selection-start-column="45" selection-end-line="99" selection-end-column="45" />
+            <state relative-caret-position="60">
+              <caret line="4" column="24" lean-forward="true" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="result1.csv" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/result1.csv">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="result.csv" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/result.csv">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="39" lean-forward="true" selection-start-line="21" selection-start-column="39" selection-end-line="21" selection-end-column="39" />
             </state>
           </provider>
         </entry>
@@ -186,22 +162,6 @@
             <path>
               <item name="StoreLayout" type="b2602c69:ProjectViewProjectNode" />
               <item name="StoreLayout" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="StoreLayout" type="b2602c69:ProjectViewProjectNode" />
-              <item name="StoreLayout" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="StoreLayout" type="b2602c69:ProjectViewProjectNode" />
-              <item name="StoreLayout" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="details" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="StoreLayout" type="b2602c69:ProjectViewProjectNode" />
-              <item name="StoreLayout" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -355,11 +315,12 @@
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2359015" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32965517" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.6110345" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="7" weight="0.24965517" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.24965517" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -368,7 +329,6 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -720,8 +680,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/layout_manager.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="99" column="45" selection-start-line="99" selection-start-column="45" selection-end-line="99" selection-end-column="45" />
+        <state relative-caret-position="60">
+          <caret line="4" column="24" lean-forward="true" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>

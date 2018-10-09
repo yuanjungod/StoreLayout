@@ -1,5 +1,4 @@
 import os
-import pandas as pd
 import math
 from lib.box_analyze_strategy import BoxAnalyseStragy
 from lib.data_loader import DataLoader
