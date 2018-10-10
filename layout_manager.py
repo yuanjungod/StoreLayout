@@ -11,9 +11,10 @@ class LayoutManager(object):
     def __init__(self):
         self.box_analyse = BoxAnalyseStragy()
         self.category_sort_info = dict()
-        print("分析中...")
+        print("分析中......")
         self.box_analyse_result, category_sort_info = self.box_analyse.analyse(
             os.getcwd() + "/data/details/")
+        print("分析完成")
         self.data_loader = DataLoader()
         for i in self.box_analyse_result:
             for j in self.box_analyse_result[i]:
@@ -36,11 +37,11 @@ class LayoutManager(object):
             for j in self.category_sort_info[i]:
                 for h in self.category_sort_info[i][j]:
                     self.category_sort_info[i][j][h] *= confidence
-                print(i, j, self.category_sort_info[i][j])
+                # print(i, j, self.category_sort_info[i][j])
 
     @classmethod
     def section_choose(cls, position, result_pd):
-        print("position", position)
+        # print("position", position)
         index_cell_length = result_pd.shape[0]//INDEX_DIVIDE
         column_cell_length = result_pd.shape[1]//COLUMN_DIVIDE
         cash_orientation = BoxAnalyseStragy.get_value_index_column(result_pd, 10009)
@@ -55,15 +56,15 @@ class LayoutManager(object):
     def internal_sort(cls, clothing):
         clothing.sort(key=lambda a: sum([a["category_score_list"][i]*(10**9/(1000**i)) for i in range(
             len(a["category_score_list"]))])-20**math.log((datetime.now() - a["date"]).days), reverse=True)
-        print(clothing)
+        # print(clothing)
         return clothing
 
     def choose_best(self, section, boy_clothing, girl_clothing, rank=0):
         if section[1] < COLUMN_DIVIDE//2 and sum([i["count"] for i in boy_clothing]) > 0:
-            print("boy_clothing")
+            # print("boy_clothing")
             clothing = boy_clothing
         elif section[1] >= COLUMN_DIVIDE//2 and sum([i["count"] for i in girl_clothing]) > 0:
-            print("girl_clothing")
+            # print("girl_clothing")
             clothing = girl_clothing
         else:
             clothing = boy_clothing if sum([i["count"] for i in boy_clothing]) > 0 else girl_clothing
@@ -97,8 +98,8 @@ class LayoutManager(object):
                         else:
                             total_cell += 1
         if sum(layout.data_loader.display_clothing_dict.values()) != total_cell:
-            print("可以摆放%s个单元格，提供了%s单元格服装,需要调整" % (total_cell, sum(layout.data_loader.display_clothing_dict.values())))
-            exit()
+            print("%s店,需要摆放%s个单元格,提供了%s单元格服装,请调整" % (csv_path.split("/")[-1].split(".")[0], total_cell, sum(layout.data_loader.display_clothing_dict.values())))
+            return
         boy_clothing = list()
         girl_clothing = list()
         for key, value in layout.data_loader.display_clothing_dict.items():
@@ -112,7 +113,7 @@ class LayoutManager(object):
                 clothing_info["name"] = key
                 girl_clothing.append(clothing_info)
 
-        print("layout begin...")
+        print("%s店,生成服装布局..." % csv_path.split("/")[-1].split(".")[0])
 
         for i in range(len(self.data_loader.result_pd.loc[0])):
             index_length = len(self.data_loader.result_pd.index)-1
@@ -122,7 +123,7 @@ class LayoutManager(object):
                     if self.data_loader.result_pd.at[index_length-j, fix_i] not in [-1]:
                         continue
                     section = self.section_choose([index_length-j, fix_i], self.data_loader.result_pd)
-                    print("section", section)
+                    # print("section", section)
                     result_list = self.data_loader.encode_pd.at[index_length-j, fix_i]
                     rank = 0
                     for k in range(len(result_list)):
@@ -136,7 +137,7 @@ class LayoutManager(object):
                             rank += 1
                     self.data_loader.result_pd.at[index_length-j, fix_i] = result_list
 
-        self.data_loader.result_pd.to_csv("result1.csv")
+        # self.data_loader.result_pd.to_csv("result1.csv")
 
         for i in range(len(self.data_loader.result_pd.index)):
 
@@ -162,13 +163,16 @@ class LayoutManager(object):
                     else:
                         a = "&".join(a[0])
                 self.data_loader.result_pd.at[i, j] = a
-        print(self.data_loader.result_pd)
-        self.data_loader.result_pd.to_csv("result.csv")
+        # print(self.data_loader.result_pd)
+        self.data_loader.result_pd.to_csv(os.getcwd() + "/data/result/" + "%s.csv" % csv_path.split("/")[-1].split(".")[0])
+        print("保存至[%s" % os.getcwd() + "/data/result/" + "%s.csv]" % csv_path.split("/")[-1].split(".")[0])
 
 
 if __name__ == "__main__":
     layout = LayoutManager()
-    layout.layout("/Users/happy/code/StoreLayout/data/details/高县.csv")
+    root_path = "/Users/happy/code/StoreLayout/data/details"
+    for file_path in os.listdir(root_path):
+        layout.layout(os.path.join(root_path, file_path))
 
 
 
