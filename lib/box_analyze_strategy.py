@@ -1,4 +1,5 @@
 import os
+from .config import *
 from .data_loader import DataLoader
 
 
@@ -39,8 +40,8 @@ class BoxAnalyseStragy(object):
         if self.data_list is None:
             self.get_all_data(root_path)
         for encode_pd in self.data_list:
-            index_divide = self.get_divide_partition(encode_pd.encode_pd.shape[0]+1, divide_count=4)
-            column_divide = self.get_divide_partition(encode_pd.encode_pd.shape[1]+1, divide_count=4)
+            index_divide = self.get_divide_partition(encode_pd.encode_pd.shape[0]+1, divide_count=DIVIDE)
+            column_divide = self.get_divide_partition(encode_pd.encode_pd.shape[1]+1, divide_count=DIVIDE)
             cash_orientation = self.get_value_index_column(encode_pd.encode_pd, 10009)
             if sum([i[1] for i in cash_orientation]) / len(cash_orientation) < len(encode_pd.encode_pd.loc[0]) / 2:
                 for index in range(divide_count):
@@ -150,7 +151,7 @@ if __name__ == "__main__":
     # result_list = list()
     # result_list = BoxAnalyseStragy.get_item_from_list([[[1, [2]]]], result_list)
     # print(result_list)
-    box_analyse_result, category_sort_info = box_analyse.analyse(os.getcwd() + "/../data/details/", 4)
+    box_analyse_result, category_sort_info = box_analyse.analyse(os.getcwd() + "/../data/details/", DIVIDE)
     for i in box_analyse_result:
         for j in box_analyse_result[i]:
             print("#############################", i, j)

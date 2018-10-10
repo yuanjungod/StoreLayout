@@ -3,6 +3,7 @@ HIDDEN_DIM = 10
 N_LAYER = 1
 OUT_DIM = 10
 LR = 0.2
+DIVIDE = 4
 
 entity_dict = {
     "橱窗": 10001,
