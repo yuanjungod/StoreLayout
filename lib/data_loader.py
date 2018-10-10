@@ -71,9 +71,9 @@ class DataLoader(object):
                     self.encode_pd.at[i, j] = []
                     for m in str(self.etl_pd.loc[(i, j)]).split("/"):
                         self.encode_pd.loc[(i, j)].append([self.name_dict[n]["index"] for n in m.split("&")])
-                elif self.etl_pd.loc[(i, j)] in entity_dict:
-                    self.result_pd.at[i, j] = entity_dict[self.etl_pd.loc[i][j]]
-                    self.encode_pd.at[i, j] = entity_dict[self.etl_pd.loc[i][j]]
+                elif self.etl_pd.loc[(i, j)] in ENTITY_DICT:
+                    self.result_pd.at[i, j] = ENTITY_DICT[self.etl_pd.loc[i][j]]
+                    self.encode_pd.at[i, j] = ENTITY_DICT[self.etl_pd.loc[i][j]]
                 else:
                     if isinstance(self.etl_pd.loc[(i, j)], str) and self.etl_pd.loc[i][j] != "0":
                         print(self.etl_pd.loc[i][j], type(self.etl_pd.loc[i][j]))

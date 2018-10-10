@@ -13,7 +13,7 @@ class LayoutManager(object):
         self.category_sort_info = dict()
         print("分析中...")
         self.box_analyse_result, category_sort_info = self.box_analyse.analyse(
-            os.getcwd() + "/data/details/", DIVIDE)
+            os.getcwd() + "/data/details/")
         self.data_loader = DataLoader()
         for i in self.box_analyse_result:
             for j in self.box_analyse_result[i]:
@@ -31,41 +31,45 @@ class LayoutManager(object):
                     self.category_sort_info[i][item[1][0]] = dict()
                 self.category_sort_info[i][item[1][0]][item[1][1]] = item[0]
         for i in self.category_sort_info:
+            confidence = 10*sum([len(self.category_sort_info[i][k]) for k in self.category_sort_info[i]])
+            # confidence = 1
             for j in self.category_sort_info[i]:
+                for h in self.category_sort_info[i][j]:
+                    self.category_sort_info[i][j][h] *= confidence
                 print(i, j, self.category_sort_info[i][j])
 
     @classmethod
     def section_choose(cls, position, result_pd):
         print("position", position)
-        index_cell_length = result_pd.shape[0]//DIVIDE
-        column_cell_length = result_pd.shape[1]//DIVIDE
+        index_cell_length = result_pd.shape[0]//INDEX_DIVIDE
+        column_cell_length = result_pd.shape[1]//COLUMN_DIVIDE
         cash_orientation = BoxAnalyseStragy.get_value_index_column(result_pd, 10009)
         if sum([i[1] for i in cash_orientation]) / len(cash_orientation) < len(result_pd.loc[0]) / 2:
-            return min(DIVIDE - math.ceil((position[0]+0.01) / index_cell_length), DIVIDE-1), \
-                   min(math.ceil((position[1]+0.01) / column_cell_length)-1, DIVIDE - 1)
+            return max(INDEX_DIVIDE - math.ceil((position[0]+0.01) / index_cell_length), 0), \
+                   min(math.ceil((position[1]+0.01) / column_cell_length)-1, COLUMN_DIVIDE - 1)
         else:
-            return min(DIVIDE - math.ceil((position[0]+0.01) / index_cell_length), DIVIDE-1), \
-                   max(DIVIDE-math.ceil((position[1]+0.01) / column_cell_length), 0)
+            return max(INDEX_DIVIDE - math.ceil((position[0]+0.01) / index_cell_length), 0), \
+                   max(COLUMN_DIVIDE-math.ceil((position[1]+0.01) / column_cell_length), 0)
 
     @classmethod
     def internal_sort(cls, clothing):
         clothing.sort(key=lambda a: sum([a["category_score_list"][i]*(10**9/(1000**i)) for i in range(
-            len(a["category_score_list"]))])-(datetime.now() - a["date"]).days/30, reverse=True)
+            len(a["category_score_list"]))])-20**math.log((datetime.now() - a["date"]).days), reverse=True)
         print(clothing)
-        # exit()
         return clothing
 
-    def get_choose_best(self, section, boy_clothing, girl_clothing, rank=0):
-        if section[1] < 2 and sum([i["count"] for i in boy_clothing]) > 0:
+    def choose_best(self, section, boy_clothing, girl_clothing, rank=0):
+        if section[1] < COLUMN_DIVIDE//2 and sum([i["count"] for i in boy_clothing]) > 0:
+            print("boy_clothing")
             clothing = boy_clothing
-        elif section[1] >= 2 and sum([i["count"] for i in girl_clothing]) > 0:
+        elif section[1] >= COLUMN_DIVIDE//2 and sum([i["count"] for i in girl_clothing]) > 0:
+            print("girl_clothing")
             clothing = girl_clothing
         else:
             clothing = boy_clothing if sum([i["count"] for i in boy_clothing]) > 0 else girl_clothing
         for i in clothing:
             i["category_score_list"] = [self.category_sort_info[j].get(section[0], {}).get(section[1], 0) for j in i["category"]]
 
-        # clothing.sort(key=lambda a: a["category_score_list"][0], reverse=True)
         clothing = self.internal_sort(clothing)
         if rank >= len(clothing):
             best_one = clothing[-1]
@@ -79,7 +83,7 @@ class LayoutManager(object):
 
         return best_one['index']
 
-    def layout(self, csv_path):
+    def layout(self, csv_path, context=None):
         self.data_loader.load_csv(csv_path)
         total_cell = 0
         for i in self.data_loader.result_pd.index:
@@ -108,41 +112,41 @@ class LayoutManager(object):
                 clothing_info["name"] = key
                 girl_clothing.append(clothing_info)
 
-        # boy_clothing.sort(key=lambda a: a["date"], reverse=True)
-        #
-        # girl_clothing.sort(key=lambda a: a["date"], reverse=True)
-
         print("layout begin...")
 
         for i in range(len(self.data_loader.result_pd.loc[0])):
             index_length = len(self.data_loader.result_pd.index)-1
-            for j in self.data_loader.result_pd.index:
-                if self.data_loader.result_pd.at[index_length-j, i] not in [-1]:
-                    continue
-                section = self.section_choose([index_length-j, i], self.data_loader.result_pd)
-                print("section", section)
-                result_list = self.data_loader.encode_pd.at[index_length-j, i]
-                rank = 0
-                for k in range(len(result_list)):
-                    if isinstance(result_list[k], list):
-                        for h in range(len(result_list[k])):
-                            result_list[k][h] = self.get_choose_best(section, boy_clothing, girl_clothing, rank)
-                            rank += 1
+            fix_i_list = [i, len(self.data_loader.result_pd.loc[0]) - i - 1]
+            for fix_i in set(fix_i_list):
+                for j in self.data_loader.result_pd.index:
+                    if self.data_loader.result_pd.at[index_length-j, fix_i] not in [-1]:
+                        continue
+                    section = self.section_choose([index_length-j, fix_i], self.data_loader.result_pd)
+                    print("section", section)
+                    result_list = self.data_loader.encode_pd.at[index_length-j, fix_i]
+                    rank = 0
+                    for k in range(len(result_list)):
+                        if isinstance(result_list[k], list):
+                            for h in range(len(result_list[k])):
+                                result_list[k][h] = self.choose_best(section, boy_clothing, girl_clothing, rank)
+                                rank += 1
 
-                    else:
-                        result_list[k] = self.get_choose_best(section, boy_clothing, girl_clothing, rank)
-                        rank += 1
-                self.data_loader.result_pd.at[index_length-j, i] = result_list
+                        else:
+                            result_list[k] = self.choose_best(section, boy_clothing, girl_clothing, rank)
+                            rank += 1
+                    self.data_loader.result_pd.at[index_length-j, fix_i] = result_list
 
         self.data_loader.result_pd.to_csv("result1.csv")
-        for i in self.data_loader.result_pd.index:
+
+        for i in range(len(self.data_loader.result_pd.index)):
+
             for j in range(len(self.data_loader.result_pd.loc[i])):
                 a = self.data_loader.result_pd.at[i, j]
                 if not isinstance(a, list):
                     if a in self.data_loader.category_dict and a != 0:
                         a = self.data_loader.category_dict[a]["name"]
-                    elif a in entity_dict.values():
-                        for key, value in entity_dict.items():
+                    elif a in ENTITY_DICT.values():
+                        for key, value in ENTITY_DICT.items():
                             if a == value:
                                 a = key
                 else:

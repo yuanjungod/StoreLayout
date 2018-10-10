@@ -35,36 +35,36 @@ class BoxAnalyseStragy(object):
             data.load_csv(os.path.join(root_path, i))
             self.data_list.append(data)
 
-    def get_all_box(self, root_path, divide_count):
+    def get_all_box(self, root_path):
         result_box_dict = {}
         if self.data_list is None:
             self.get_all_data(root_path)
         for encode_pd in self.data_list:
-            index_divide = self.get_divide_partition(encode_pd.encode_pd.shape[0]+1, divide_count=DIVIDE)
-            column_divide = self.get_divide_partition(encode_pd.encode_pd.shape[1]+1, divide_count=DIVIDE)
+            index_divide = self.get_divide_partition(encode_pd.encode_pd.shape[0]+1, divide_count=INDEX_DIVIDE)
+            column_divide = self.get_divide_partition(encode_pd.encode_pd.shape[1]+1, divide_count=COLUMN_DIVIDE)
             cash_orientation = self.get_value_index_column(encode_pd.encode_pd, 10009)
             if sum([i[1] for i in cash_orientation]) / len(cash_orientation) < len(encode_pd.encode_pd.loc[0]) / 2:
-                for index in range(divide_count):
+                for index in range(INDEX_DIVIDE):
                     if index not in result_box_dict:
                         result_box_dict[index] = dict()
-                    for column in range(divide_count):
+                    for column in range(COLUMN_DIVIDE):
                         if column not in result_box_dict[index]:
                             result_box_dict[index][column] = list()
                         result_box_dict[index][column].append(
-                            encode_pd.encode_pd.loc[index_divide[divide_count - 1 - index]:
-                                                    index_divide[divide_count - index], column_divide[column]:
+                            encode_pd.encode_pd.loc[index_divide[INDEX_DIVIDE - 1 - index]:
+                                                    index_divide[INDEX_DIVIDE - index], column_divide[column]:
                                                                                         column_divide[column + 1]])
             else:
-                for index in range(divide_count):
+                for index in range(INDEX_DIVIDE):
                     if index not in result_box_dict:
                         result_box_dict[index] = dict()
-                    for column in range(divide_count):
+                    for column in range(COLUMN_DIVIDE):
                         if column not in result_box_dict[index]:
                             result_box_dict[index][column] = list()
                         result_box_dict[index][column].append(
-                            encode_pd.encode_pd.loc[index_divide[divide_count - 1 - index]:
-                                                    index_divide[divide_count - index], column_divide[divide_count-column-1]:
-                                                                                        column_divide[divide_count-column]])
+                            encode_pd.encode_pd.loc[index_divide[INDEX_DIVIDE - 1 - index]:
+                                                    index_divide[INDEX_DIVIDE - index], column_divide[COLUMN_DIVIDE-column-1]:
+                                                                                        column_divide[COLUMN_DIVIDE-column]])
         return result_box_dict
 
     @classmethod
@@ -76,14 +76,14 @@ class BoxAnalyseStragy(object):
                 cls.get_item_from_list(i, result_list)
         return result_list
 
-    def analyse(self, root_path, divide_count):
+    def analyse(self, root_path):
         box_analyse_result = dict()
-        result_box_dict = self.get_all_box(root_path, divide_count)
+        result_box_dict = self.get_all_box(root_path)
         category_dict = self.data_list[0].category_dict
-        for i in range(divide_count):
+        for i in range(INDEX_DIVIDE):
             if i not in box_analyse_result:
                 box_analyse_result[i] = dict()
-            for j in range(divide_count):
+            for j in range(COLUMN_DIVIDE):
                 if j not in box_analyse_result[i]:
                     box_analyse_result[i][j] = dict()
                     tmp_pd_list = result_box_dict[i][j]
@@ -151,7 +151,7 @@ if __name__ == "__main__":
     # result_list = list()
     # result_list = BoxAnalyseStragy.get_item_from_list([[[1, [2]]]], result_list)
     # print(result_list)
-    box_analyse_result, category_sort_info = box_analyse.analyse(os.getcwd() + "/../data/details/", DIVIDE)
+    box_analyse_result, category_sort_info = box_analyse.analyse(os.getcwd() + "/../data/details/")
     for i in box_analyse_result:
         for j in box_analyse_result[i]:
             print("#############################", i, j)

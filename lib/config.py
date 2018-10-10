@@ -3,9 +3,10 @@ HIDDEN_DIM = 10
 N_LAYER = 1
 OUT_DIM = 10
 LR = 0.2
-DIVIDE = 4
+INDEX_DIVIDE = 6
+COLUMN_DIVIDE = 4
 
-entity_dict = {
+ENTITY_DICT = {
     "橱窗": 10001,
     "入口": 10002,
     "推广": 10003,
@@ -20,6 +21,14 @@ entity_dict = {
     "库房": 10012,
     "门口": 10013,
     "包": 10014
+}
+
+CONTEXT_DICT = {
+    "season": "春",
+    "rain": 5,
+    "economics": 5,
+    "temperature": 5,
+    "bandit": 5
 }
 
 
