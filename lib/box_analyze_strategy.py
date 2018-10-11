@@ -31,10 +31,10 @@ class BoxAnalyseStragy(object):
     def get_all_data(self, root_path):
         self.data_list = list()
         for i in os.listdir(root_path):
-            for j in range(6):
-                print('\r#########{},分析中'.format(i, "."*(j+1)), end='')
-                time.sleep(0.1)
-                # print("###################################", i)
+            # for j in range(6):
+                # print('\r#########{},分析中'.format(i, "."*(j+1)), end='')
+                # time.sleep(0.1)
+            print("###################################", i)
             data = DataLoader()
             data.load_csv(os.path.join(root_path, i))
             self.data_list.append(data)

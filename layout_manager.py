@@ -11,7 +11,7 @@ class LayoutManager(object):
     def __init__(self):
         self.box_analyse = BoxAnalyseStragy()
         self.category_sort_info = dict()
-        print("分析中......")
+        print("数据分析中......")
         self.box_analyse_result, category_sort_info = self.box_analyse.analyse(
             os.getcwd() + "/data/details/")
         print("分析完成")
