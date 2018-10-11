@@ -103,7 +103,10 @@ class LayoutManager(object):
         boy_clothing = list()
         girl_clothing = list()
         for key, value in layout.data_loader.display_clothing_dict.items():
+            if value < 0:
+                continue
             clothing_info = layout.data_loader.name_dict[key]
+
             if clothing_info["sex"] == 1:
                 clothing_info["count"] = value
                 clothing_info["name"] = key

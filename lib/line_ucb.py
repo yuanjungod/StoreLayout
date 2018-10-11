@@ -44,13 +44,13 @@ class LinUCB:
             # error
             pass
 
-    def recommend(self, timestamp, user_features, articles):
-        xaT = np.array([user_features])  # d * 1
+    def recommend(self, clothing_feature, cell_feature):
+        xaT = np.array([clothing_feature])  # d * 1
         xa = np.transpose(xaT)
 
-        AaI_tmp = np.array([self.AaI[article] for article in articles])
-        theta_tmp = np.array([self.theta[article] for article in articles])
-        art_max = articles[np.argmax(np.dot(xaT, theta_tmp) + self.alpha * np.sqrt(np.dot(np.dot(xaT, AaI_tmp), xa)))]
+        AaI_tmp = np.array([self.AaI[cell] for cell in cell_feature])
+        theta_tmp = np.array([self.theta[cell] for cell in cell_feature])
+        art_max = cell_feature[np.argmax(np.dot(xaT, theta_tmp) + self.alpha * np.sqrt(np.dot(np.dot(xaT, AaI_tmp), xa)))]
 
         self.x = xa
         self.xT = xaT
