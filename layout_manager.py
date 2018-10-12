@@ -1,7 +1,7 @@
 import os
 import math
 from datetime import datetime
-from lib.box_analyze_strategy import BoxAnalyseStragy
+from lib.box_analyze_strategy import BoxAnalyseStrategy
 from lib.data_loader import DataLoader
 import random
 import copy
@@ -11,7 +11,7 @@ from lib.config import *
 class LayoutManager(object):
 
     def __init__(self):
-        self.box_analyse = BoxAnalyseStragy()
+        self.box_analyse = BoxAnalyseStrategy()
         self.category_sort_info = dict()
         print("数据分析中......")
         self.box_analyse_result, category_sort_info = self.box_analyse.analyse(
@@ -46,7 +46,7 @@ class LayoutManager(object):
         # print("position", position)
         index_cell_length = result_pd.shape[0]//INDEX_DIVIDE
         column_cell_length = result_pd.shape[1]//COLUMN_DIVIDE
-        cash_orientation = BoxAnalyseStragy.get_value_index_column(result_pd, 10009)
+        cash_orientation = BoxAnalyseStrategy.get_value_index_column(result_pd, 10009)
         if sum([i[1] for i in cash_orientation]) / len(cash_orientation) < len(result_pd.loc[0]) / 2:
             return max(INDEX_DIVIDE - math.ceil((position[0]+0.01) / index_cell_length), 0), \
                    min(math.ceil((position[1]+0.01) / column_cell_length)-1, COLUMN_DIVIDE - 1)
@@ -54,6 +54,7 @@ class LayoutManager(object):
             return max(INDEX_DIVIDE - math.ceil((position[0]+0.01) / index_cell_length), 0), \
                    max(COLUMN_DIVIDE-math.ceil((position[1]+0.01) / column_cell_length), 0)
 
+    # MODEL NEED
     @classmethod
     def internal_sort(cls, clothing, context):
         clothing.sort(key=lambda a: sum([a["category_score_list"][i]*(10**9/(1000**i)) for i in range(
@@ -63,15 +64,12 @@ class LayoutManager(object):
 
     def choose_best(self, section, boy_clothing, girl_clothing, context, rank=0):
         if section[1] < COLUMN_DIVIDE//2 and sum([i["count"] for i in boy_clothing]) > 0:
-            # print("boy_clothing")
             clothing = boy_clothing
         elif section[1] >= COLUMN_DIVIDE//2 and sum([i["count"] for i in girl_clothing]) > 0:
-            # print("girl_clothing")
             clothing = girl_clothing
         else:
             clothing = boy_clothing if sum([i["count"] for i in boy_clothing]) > 0 else girl_clothing
         for i in clothing:
-            # print(i)
             i["category_score_list"] = [self.category_sort_info[j].get(section[0], {}).get(section[1], 0) for j in i["category"]]
 
         clothing = self.internal_sort(clothing, context)
@@ -186,8 +184,6 @@ class LayoutManager(object):
                         self.data_loader.result_pd.at[index_length - j, big_search_fix_i_neighbor] = get_result_list(
                             index_length-j, big_search_fix_i_neighbor)
                         big_search_fix_i_neighbor += 1
-
-        # self.data_loader.result_pd.to_csv("result1.csv")
 
         for i in range(len(self.data_loader.result_pd.index)):
 

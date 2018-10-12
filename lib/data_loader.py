@@ -25,7 +25,7 @@ class DataLoader(object):
         self.display_clothing_dict = dict()
         self.file_name = None
 
-    def load_csv(self, origin_csv_path, save_path=None):
+    def load_csv(self, origin_csv_path):
 
         self.origin_pd = None
         self.etl_pd = None
@@ -96,123 +96,5 @@ class DataLoader(object):
                     self.result_pd.at[(i, j)] = 0
                     self.encode_pd.at[(i, j)] = 0
 
-    def generate_train_data(self, origin_csv_path):
-        category_set = set()
-        all = list()
-        for i in self.etl_pd.index:
-            for j in range(len(self.etl_pd.loc[i])):
-                print(self.etl_pd.loc[i][j], type(self.etl_pd.loc[i][j]))
-                if str(self.etl_pd.loc[i][j]) not in ["橱窗", "入口", "推广", "试衣间", "0.0", "0"]:
-                    # print("%s: %s" % (self.etl_pd.loc[i][j], count))
-                    category_set.add(self.etl_pd.loc[i][j])
-                    all.append(self.etl_pd.loc[i][j])
-        count = 0
-        for category in category_set:
-            print("'%s': %s," % (category, count))
-            count += 1
-        print(len(all))
-
-        # train_x = list()
-        # train_y = list()
-        #
-        # if self.etl_pd is not None:
-        #     self.load_csv(origin_csv_path)
-        #
-        # for i in self.etl_pd.index:
-        #     for j in range(len(self.etl_pd.loc[i])):
-        #         if self.etl_pd.loc[i][j] in category_dict:
-        #             pass
-
-        return self.etl_pd, self.result_pd
-
-    @classmethod
-    def data_generate1(cls, batch_size):
-        simulated_data = list()
-        # simulated_data = [0 for i in range(10)]
-        # simulated_data.append(1)
-        # simulated_data.append(1)
-        # simulated_data.append(1)
-        for i in range(1000):
-            tmp = random.choice(range(OUT_DIM))
-            if random.random() < 0.6:
-                simulated_data.append(tmp)
-                simulated_data.append(tmp)
-                simulated_data.append(tmp)
-                simulated_data.append(tmp)
-                simulated_data.append(tmp)
-            else:
-                simulated_data.append(tmp)
-                simulated_data.append(tmp)
-                simulated_data.append(tmp)
-                simulated_data.append(tmp)
-                simulated_data.append(tmp)
-                simulated_data.append(tmp)
-            if len(simulated_data) >= 1000:
-                simulated_data = simulated_data[:1000]
-                break
-
-        train_x = list()
-        train_y = list()
-
-        while True:
-            shuffle_index_list = [i for i in range(890)]
-            random.shuffle(shuffle_index_list)
-            for i in shuffle_index_list:
-                train_x.append(simulated_data[i: i+IN_DIME])
-                train_y.append(simulated_data[i+IN_DIME+1])
-                if len(train_x) == batch_size:
-                    train_x = torch.unsqueeze(torch.FloatTensor(train_x), 0)
-                    train_x = train_x.view(-1, 1, IN_DIME)
-
-                    train_y = torch.LongTensor(train_y)
-                    yield train_x, train_y
-
-                    train_x = list()
-                    train_y = list()
-
-
-if __name__ == "__main__":
-    # data_iter = DataLoader.data_generate1(10)
-    # print(next(data_iter))
-    print(os.getcwd())
-    dl = DataLoader()
-    dl.load_csv(os.getcwd() + "/../data/details/仁寿.csv", "../data/云货架门店摆放etl.csv")
-    print(dl.result_pd)
-    print(dl.encode_pd)
-
-    # print(pd1.loc[0][0])
-    # print(dl.generate_train_data("/Users/happy/code/StoreLayout/data/云货架门店摆放.csv"))
-    # import os
-    # category_set = set()
-    # for i in os.listdir("/Users/happy/code/StoreLayout/data/details"):
-    #     result_list = list()
-    #     pd_data = pd.read_csv("/Users/happy/code/StoreLayout/data/details/" + i)
-    #     for j in pd_data.index:
-    #         if not (pd.isna(pd_data.loc[j][0]) or pd.isnull(pd.isna(pd_data.loc[j][0]))):
-    #             item_list = pd_data.loc[j].tolist()
-    #             # current_item = item_list[0]
-    #             # for j in range(len(item_list)):
-    #             #     if pd.isna(item_list[j]):
-    #             #         item_list[j] = current_item
-    #             #     else:
-    #             #         current_item = item_list[j]
-    #             result_list.append(item_list)
-    #             etl_pd = pd.DataFrame(result_list, columns=[n for n in range(len(pd_data.loc[0]))])
-    #             for k in etl_pd.index:
-    #                 for y in etl_pd.loc[k]:
-    #                     if not (pd.isna(y) or pd.isnull(y) or isinstance(y, np.int64) or isinstance(y, np.float64)):
-    #                         # print(y, )
-    #                         list1 = y.split("/")
-    #                         # print(list1)
-    #                         for m in list1:
-    #                             for j1 in m.split("&"):
-    #                                 if j1 == "裤":
-    #                                     print(y)
-    #                                 category_set.add(j1)
-    # count = 0
-    # category_set.remove("0")
-    # for item in category_set:
-    #     print(item)
-    #     count += 1
 
 

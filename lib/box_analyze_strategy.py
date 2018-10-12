@@ -4,7 +4,7 @@ from .config import *
 from .data_loader import DataLoader
 
 
-class BoxAnalyseStragy(object):
+class BoxAnalyseStrategy(object):
 
     def __init__(self):
         self.data_list = None
@@ -31,9 +31,6 @@ class BoxAnalyseStragy(object):
     def get_all_data(self, root_path):
         self.data_list = list()
         for i in os.listdir(root_path):
-            # for j in range(6):
-                # print('\r#########{},分析中'.format(i, "."*(j+1)), end='')
-                # time.sleep(0.1)
             print("###################################", i)
             data = DataLoader()
             data.load_csv(os.path.join(root_path, i))
@@ -44,8 +41,8 @@ class BoxAnalyseStragy(object):
         if self.data_list is None:
             self.get_all_data(root_path)
         for encode_pd in self.data_list:
-            index_divide = self.get_divide_partition(encode_pd.encode_pd.shape[0]+1, divide_count=INDEX_DIVIDE)
-            column_divide = self.get_divide_partition(encode_pd.encode_pd.shape[1]+1, divide_count=COLUMN_DIVIDE)
+            index_divide = self.get_divide_partition(encode_pd.encode_pd.shape[0] + 1, divide_count=INDEX_DIVIDE)
+            column_divide = self.get_divide_partition(encode_pd.encode_pd.shape[1] + 1, divide_count=COLUMN_DIVIDE)
             cash_orientation = self.get_value_index_column(encode_pd.encode_pd, 10009)
             if sum([i[1] for i in cash_orientation]) / len(cash_orientation) < len(encode_pd.encode_pd.loc[0]) / 2:
                 for index in range(INDEX_DIVIDE):
@@ -67,8 +64,9 @@ class BoxAnalyseStragy(object):
                             result_box_dict[index][column] = list()
                         result_box_dict[index][column].append(
                             encode_pd.encode_pd.loc[index_divide[INDEX_DIVIDE - 1 - index]:
-                                                    index_divide[INDEX_DIVIDE - index], column_divide[COLUMN_DIVIDE-column-1]:
-                                                                                        column_divide[COLUMN_DIVIDE-column]])
+                                                    index_divide[INDEX_DIVIDE - index],
+                            column_divide[COLUMN_DIVIDE - column - 1]:
+                            column_divide[COLUMN_DIVIDE - column]])
         return result_box_dict
 
     @classmethod
@@ -134,36 +132,9 @@ class BoxAnalyseStragy(object):
                 for category in box_analyse_result[i][j]["category"]:
                     if category not in category_sort_info:
                         category_sort_info[category] = list()
-                    category_sort_info[category].append([box_analyse_result[i][j]["category"][category]/sum(
+                    category_sort_info[category].append([box_analyse_result[i][j]["category"][category] / sum(
                         box_analyse_result[i][j]["category"].values()), (i, j)])
         for category in category_sort_info:
             category_sort_info[category].sort(key=lambda a: a[0], reverse=True)
 
         return box_analyse_result, category_sort_info
-
-
-if __name__ == "__main__":
-    box_analyse = BoxAnalyseStragy()
-    # print(box_analyse.get_divide_partition(12, 3))
-    # result_box_dict = box_analyse.get_all_box(os.getcwd() + "/../data/details/", 4)
-    # for i in result_box_dict:
-    #     for j in result_box_dict[i]:
-    #         print("#####fuck: %s, %s" % (i, j), result_box_dict[i][j])
-    # box_analyse.get_all_data(os.getcwd() + "/../data/details/")
-    # print(box_analyse.data_list[0].encode_pd.shape)
-    # print(box_analyse.data_list[0].encode_pd.loc[23: 25, 10: 12])
-    # result_list = list()
-    # result_list = BoxAnalyseStragy.get_item_from_list([[[1, [2]]]], result_list)
-    # print(result_list)
-    box_analyse_result, category_sort_info = box_analyse.analyse(os.getcwd() + "/../data/details/")
-    for i in box_analyse_result:
-        for j in box_analyse_result[i]:
-            print("#############################", i, j)
-            print(box_analyse_result[i][j]["sex"])
-            print(box_analyse_result[i][j]["category"])
-            print(box_analyse_result[i][j]["season"])
-    # print("category_sort_info", category_sort_info)
-    for category in category_sort_info:
-        print(category, category_sort_info[category])
-    # print("box_analyse_result", box_analyse_result)
-
