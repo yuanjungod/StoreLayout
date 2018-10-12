@@ -3,6 +3,8 @@ import math
 from datetime import datetime
 from lib.box_analyze_strategy import BoxAnalyseStragy
 from lib.data_loader import DataLoader
+import random
+import copy
 from lib.config import *
 
 
@@ -95,13 +97,35 @@ class LayoutManager(object):
                     for k in a:
                         if isinstance(k, list):
                             for h in k:
-                                total_cell += 1
+                                if h != 129:
+                                    total_cell += 1
                         else:
-                            total_cell += 1
+                            if k != 129:
+                                total_cell += 1
         if sum(layout.data_loader.display_clothing_dict.values()) != total_cell:
+            print("%s店,需要摆放%s个单元格,提供了%s单元格服装,将自动生成摆放的服装,请知悉" % (csv_path.split("/")[-1].split(".")[0], total_cell, sum(layout.data_loader.display_clothing_dict.values())))
             # print(layout.data_loader.display_clothing_dict)
-            print("%s店,需要摆放%s个单元格,提供了%s单元格服装,请知悉" % (csv_path.split("/")[-1].split(".")[0], total_cell, sum(layout.data_loader.display_clothing_dict.values())))
-            return
+            probability_dict = copy.deepcopy(layout.data_loader.display_clothing_dict)
+            total = sum(layout.data_loader.display_clothing_dict.values())
+            keys = list(probability_dict.keys())
+            for i in range(len(keys)):
+                if i > 0:
+                    probability_dict[keys[i]] = probability_dict[keys[i-1]] + probability_dict[keys[i]]/total
+                else:
+                    probability_dict[keys[i]] = probability_dict[keys[i]] / total
+                layout.data_loader.display_clothing_dict[keys[i]] = 0
+            print("probability_dict", probability_dict)
+            current_total_cell = total_cell
+            while current_total_cell > 0:
+                # print("fuck")
+                random_value = random.random()
+                for i in range(len(keys)):
+                    if random_value < probability_dict[keys[i]]:
+                        layout.data_loader.display_clothing_dict[keys[i]] += 1
+                        break
+                current_total_cell -= 1
+            print("display_clothing_dict", layout.data_loader.display_clothing_dict)
+
         boy_clothing = list()
         girl_clothing = list()
         for key, value in layout.data_loader.display_clothing_dict.items():
@@ -137,8 +161,9 @@ class LayoutManager(object):
                         for k in range(len(result_list)):
                             if isinstance(result_list[k], list):
                                 for h in range(len(result_list[k])):
-                                    result_list[k][h] = self.choose_best(section, boy_clothing, girl_clothing, rank)
-                                    rank += 1
+                                    if result_list[k][h] != 129:
+                                        result_list[k][h] = self.choose_best(section, boy_clothing, girl_clothing, rank)
+                                        rank += 1
 
                             else:
                                 result_list[k] = self.choose_best(section, boy_clothing, girl_clothing, rank)

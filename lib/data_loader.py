@@ -40,6 +40,7 @@ class DataLoader(object):
 
         self.clothing_property = pd.read_csv(os.getcwd() + "/data/clothing_property.csv")
         for i in self.clothing_property.index:
+            # print(i, self.clothing_property.loc[i][0])
             self.category_dict[i] = {
                 "name": self.clothing_property.loc[i][0],
                 "sex": self.Sex_dict[self.clothing_property.loc[i][1]],
@@ -67,6 +68,7 @@ class DataLoader(object):
             if not (pd.isna(self.origin_pd.loc[i][0]) or pd.isnull(pd.isna(self.origin_pd.loc[i][0]))):
                 item_list = self.origin_pd.loc[i].tolist()
                 result_list.append(item_list)
+            # print(i, item_list)
 
         self.etl_pd = pd.DataFrame(result_list, columns=[i for i in range(len(self.origin_pd.loc[0]))])
         self.etl_pd = self.etl_pd.fillna(0)
