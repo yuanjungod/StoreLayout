@@ -55,13 +55,13 @@ class LayoutManager(object):
                    max(COLUMN_DIVIDE-math.ceil((position[1]+0.01) / column_cell_length), 0)
 
     @classmethod
-    def internal_sort(cls, clothing):
+    def internal_sort(cls, clothing, context):
         clothing.sort(key=lambda a: sum([a["category_score_list"][i]*(10**9/(1000**i)) for i in range(
             len(a["category_score_list"]))])-20**math.log((datetime.now() - a["date"]).days), reverse=True)
         # print(clothing)
         return clothing
 
-    def choose_best(self, section, boy_clothing, girl_clothing, rank=0):
+    def choose_best(self, section, boy_clothing, girl_clothing, context, rank=0):
         if section[1] < COLUMN_DIVIDE//2 and sum([i["count"] for i in boy_clothing]) > 0:
             # print("boy_clothing")
             clothing = boy_clothing
@@ -74,7 +74,7 @@ class LayoutManager(object):
             # print(i)
             i["category_score_list"] = [self.category_sort_info[j].get(section[0], {}).get(section[1], 0) for j in i["category"]]
 
-        clothing = self.internal_sort(clothing)
+        clothing = self.internal_sort(clothing, context)
         if rank >= len(clothing):
             best_one = clothing[-1]
         else:
@@ -162,11 +162,12 @@ class LayoutManager(object):
                             if isinstance(result_list[k], list):
                                 for h in range(len(result_list[k])):
                                     if result_list[k][h] != 129:
-                                        result_list[k][h] = self.choose_best(section, boy_clothing, girl_clothing, rank)
+                                        result_list[k][h] = self.choose_best(
+                                            section, boy_clothing, girl_clothing, context, rank)
                                         rank += 1
 
                             else:
-                                result_list[k] = self.choose_best(section, boy_clothing, girl_clothing, rank)
+                                result_list[k] = self.choose_best(section, boy_clothing, girl_clothing, context, rank)
                                 rank += 1
                         return result_list
 
@@ -221,7 +222,7 @@ if __name__ == "__main__":
     layout = LayoutManager()
     root_path = "/Users/quantum/code/StoreLayout/data/details"
     for file_path in os.listdir(root_path):
-        layout.layout(os.path.join(root_path, file_path))
+        layout.layout(os.path.join(root_path, file_path), CONTEXT_DICT)
 
 
 
