@@ -69,6 +69,7 @@ class LayoutManager(object):
         else:
             clothing = boy_clothing if sum([i["count"] for i in boy_clothing]) > 0 else girl_clothing
         for i in clothing:
+            # print(i)
             i["category_score_list"] = [self.category_sort_info[j].get(section[0], {}).get(section[1], 0) for j in i["category"]]
 
         clothing = self.internal_sort(clothing)
@@ -98,7 +99,8 @@ class LayoutManager(object):
                         else:
                             total_cell += 1
         if sum(layout.data_loader.display_clothing_dict.values()) != total_cell:
-            print("%s店,需要摆放%s个单元格,提供了%s单元格服装,请调整" % (csv_path.split("/")[-1].split(".")[0], total_cell, sum(layout.data_loader.display_clothing_dict.values())))
+            # print(layout.data_loader.display_clothing_dict)
+            print("%s店,需要摆放%s个单元格,提供了%s单元格服装,请知悉" % (csv_path.split("/")[-1].split(".")[0], total_cell, sum(layout.data_loader.display_clothing_dict.values())))
             return
         boy_clothing = list()
         girl_clothing = list()
@@ -121,24 +123,43 @@ class LayoutManager(object):
         for i in range(len(self.data_loader.result_pd.loc[0])):
             index_length = len(self.data_loader.result_pd.index)-1
             fix_i_list = [i, len(self.data_loader.result_pd.loc[0]) - i - 1]
+
             for fix_i in set(fix_i_list):
                 for j in self.data_loader.result_pd.index:
                     if self.data_loader.result_pd.at[index_length-j, fix_i] not in [-1]:
                         continue
-                    section = self.section_choose([index_length-j, fix_i], self.data_loader.result_pd)
-                    # print("section", section)
-                    result_list = self.data_loader.encode_pd.at[index_length-j, fix_i]
-                    rank = 0
-                    for k in range(len(result_list)):
-                        if isinstance(result_list[k], list):
-                            for h in range(len(result_list[k])):
-                                result_list[k][h] = self.choose_best(section, boy_clothing, girl_clothing, rank)
-                                rank += 1
 
-                        else:
-                            result_list[k] = self.choose_best(section, boy_clothing, girl_clothing, rank)
-                            rank += 1
-                    self.data_loader.result_pd.at[index_length-j, fix_i] = result_list
+                    def get_result_list(index, column):
+                        section = self.section_choose([index_length-j, fix_i], self.data_loader.result_pd)
+                        # print("section", section)
+                        result_list = self.data_loader.encode_pd.at[index, column]
+                        rank = 0
+                        for k in range(len(result_list)):
+                            if isinstance(result_list[k], list):
+                                for h in range(len(result_list[k])):
+                                    result_list[k][h] = self.choose_best(section, boy_clothing, girl_clothing, rank)
+                                    rank += 1
+
+                            else:
+                                result_list[k] = self.choose_best(section, boy_clothing, girl_clothing, rank)
+                                rank += 1
+                        return result_list
+
+                    self.data_loader.result_pd.at[index_length-j, fix_i] = get_result_list(index_length-j, fix_i)
+
+                    small_search_fix_i_neighbor = fix_i-1
+                    while small_search_fix_i_neighbor > 0 and \
+                            self.data_loader.result_pd.at[index_length-j, small_search_fix_i_neighbor] in [-1]:
+                        self.data_loader.result_pd.at[index_length - j, small_search_fix_i_neighbor] = get_result_list(
+                            index_length-j, small_search_fix_i_neighbor)
+                        small_search_fix_i_neighbor -= 1
+
+                    big_search_fix_i_neighbor = fix_i + 1
+                    while big_search_fix_i_neighbor < len(self.data_loader.result_pd.loc[0])-2 and \
+                            self.data_loader.result_pd.at[index_length - j, big_search_fix_i_neighbor] in [-1]:
+                        self.data_loader.result_pd.at[index_length - j, big_search_fix_i_neighbor] = get_result_list(
+                            index_length-j, big_search_fix_i_neighbor)
+                        big_search_fix_i_neighbor += 1
 
         # self.data_loader.result_pd.to_csv("result1.csv")
 
@@ -173,7 +194,7 @@ class LayoutManager(object):
 
 if __name__ == "__main__":
     layout = LayoutManager()
-    root_path = "/Users/happy/code/StoreLayout/data/details"
+    root_path = "/Users/quantum/code/StoreLayout/data/details"
     for file_path in os.listdir(root_path):
         layout.layout(os.path.join(root_path, file_path))
 
