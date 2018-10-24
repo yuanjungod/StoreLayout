@@ -15,7 +15,7 @@ class LayoutManager(object):
         self.category_sort_info = dict()
         print("数据分析中......")
         self.box_analyse_result, category_sort_info = self.box_analyse.analyse(
-            os.getcwd() + "/data/details/")
+            os.getcwd() + "/data/details/20181024/utf8_files/")
         print("分析完成")
         self.data_loader = DataLoader()
         for i in self.box_analyse_result:
@@ -85,8 +85,8 @@ class LayoutManager(object):
 
         return best_one['index']
 
-    def layout(self, csv_path, context=None):
-        self.data_loader.load_csv(csv_path)
+    def layout(self, csv_path, plan_path, context=None):
+        self.data_loader.load_csv(csv_path, plan_path)
         total_cell = 0
         for i in self.data_loader.result_pd.index:
             for j in range(len(self.data_loader.result_pd.loc[i])):
@@ -216,9 +216,10 @@ class LayoutManager(object):
 
 if __name__ == "__main__":
     layout = LayoutManager()
-    root_path = "/Users/quantum/code/StoreLayout/data/details"
+    root_path = "/Users/quantum/code/StoreLayout/data/details/20181024/utf8_files/"
+    plan_path = "/Users/quantum/code/StoreLayout/data/plan/2018_15_plan_utf8.csv"
     for file_path in os.listdir(root_path):
-        layout.layout(os.path.join(root_path, file_path), CONTEXT_DICT)
+        layout.layout(os.path.join(root_path, file_path), plan_path, CONTEXT_DICT)
 
 
 
