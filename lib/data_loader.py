@@ -34,6 +34,8 @@ class DataLoader(object):
         self.name_dict = dict()
         self.display_clothing_dict = dict()
         self.props_dict = dict()
+        self.second_props_num_dict = dict()
+        self.props_item_dict = dict()
         self.file_name = None
 
     def load_csv(self, origin_csv_path, plan_csv_path=None):
@@ -74,17 +76,17 @@ class DataLoader(object):
             # print(self.display_clothing.loc[0]["品名"])
 
             for i in self.display_clothing.index:
-                name = self.display_clothing.loc[i]["品名"]
+                name = "%s%s" % (self.display_clothing.loc[i]["性别"], self.display_clothing.loc[i]["品名"])
+                self.display_clothing_dict[name] = dict()
                 if name.find("*") != -1:
-                    self.display_clothing_dict[name.split("*")[0]] = dict()
-                    self.display_clothing_dict[name.split("*")[0]]["*"] = name.split("*")[1]
-                    name = name.split("*")[0]
+                    # self.display_clothing_dict[name.split("*")[0]] = dict()
+                    self.display_clothing_dict[name]["*"] = 1
+                    # name = name.split("*")[0]
                 elif name.find("￥") != -1:
-                    self.display_clothing_dict[name.split("￥")[0]] = dict()
-                    self.display_clothing_dict[name.split("￥")[0]]["￥"] = name.split("￥")[1]
-                    name = name.split("￥")[0]
-                else:
-                    self.display_clothing_dict[name] = dict()
+                    # self.display_clothing_dict[name.split("￥")[0]] = dict()
+                    self.display_clothing_dict[name]["￥"] = 1
+                    # name = name.split("￥")[0]
+
                 for plan_property in [self.Sex_str, self.Season_str, self.Execute_time_str, self.Category_str,
                                       self.Position_str, self.Style_str, self.Importance_str]:
                     if plan_property == self.Sex_str:
@@ -106,12 +108,15 @@ class DataLoader(object):
                             position = [position]
                         self.display_clothing_dict[name][plan_property] = position
                     elif plan_property == self.Style_str:
-                        self.display_clothing_dict[name][plan_property] = self.display_clothing.loc[i][plan_property].split("-")
+                        if len(self.display_clothing.loc[i][plan_property].split("-")) == 2:
+                            self.display_clothing_dict[name][plan_property] = [int(i) for i in self.display_clothing.loc[i][plan_property].split("-")]
+                        else:
+                            self.display_clothing_dict[name][plan_property] = [
+                                int(self.display_clothing.loc[i][plan_property]), int(self.display_clothing.loc[i][plan_property])]
                     elif plan_property == self.Importance_str:
                         self.display_clothing_dict[name][plan_property] = self.display_clothing.loc[i][plan_property]
-
-            print(self.display_clothing_dict)
-            exit()
+            # print(self.display_clothing_dict)
+            # exit()
 
         self.origin_pd = pd.read_csv(origin_csv_path)
         result_list = list()
@@ -133,20 +138,34 @@ class DataLoader(object):
                 # print("before", self.etl_pd.loc[i][j], self.encode_pd.loc[i][j])
                 if str(self.etl_pd.loc[i][j]).find("￥") != -1:
                     self.props_dict[i][j]["￥"] = str(self.etl_pd.loc[i][j]).split("￥")[-1]
+
+                    if self.props_dict[i][j]["￥"] not in self.second_props_num_dict:
+                        self.second_props_num_dict[self.props_dict[i][j]["￥"]] = 0
+                    self.second_props_num_dict[self.props_dict[i][j]["￥"]] += len(str(self.etl_pd.loc[i][j]).split("/"))
+
                     self.etl_pd.at[i, j] = str(self.etl_pd.loc[i][j]).split("￥")[0]
                     self.encode_pd.at[i, j] = str(self.etl_pd.loc[i][j]).split("￥")[0]
 
                 if str(self.etl_pd.loc[i][j]).find("*") != -1:
                     self.props_dict[i][j]["*"] = str(self.etl_pd.loc[i][j]).split("*")[-1]
+
+                    if self.props_dict[i][j]["*"] not in self.second_props_num_dict:
+                        self.second_props_num_dict[self.props_dict[i][j]["*"]] = 0
+                    self.second_props_num_dict[self.props_dict[i][j]["*"]] += len(str(self.etl_pd.loc[i][j]).split("/"))
+
                     self.etl_pd.at[i, j] = str(self.etl_pd.loc[i][j]).split("*")[0]
                     self.encode_pd.at[i, j] = str(self.etl_pd.loc[i][j]).split("*")[0]
                 if str(self.etl_pd.at[i, j]).find(":") != -1:
-                    # print("OK")
                     self.props_dict[i][j][":"] = str(self.etl_pd.loc[i][j]).split(":")[-1]
+
+                    if self.props_dict[i][j][":"] not in self.second_props_num_dict:
+                        self.second_props_num_dict[self.props_dict[i][j][":"]] = 0
+                    self.second_props_num_dict[self.props_dict[i][j][":"]] += len(str(self.etl_pd.loc[i][j]).split("/"))
+
                     self.etl_pd.at[i, j] = str(self.etl_pd.loc[i][j]).split(":")[0]
                     self.encode_pd.at[i, j] = str(self.etl_pd.loc[i][j]).split(":")[0]
                 if len(self.props_dict[i][j]) == 0:
-                    self.props_dict[i][j]["."] = "墙面"
+                    self.props_dict[i][j]["."] = ["墙面"]
 
                 # print("after", str(self.etl_pd.loc[i][j]).find(":") != -1, self.encode_pd.loc[i][j])
 
