@@ -17,7 +17,7 @@ class DataLoader(object):
     Season_str = "季节"
     Execute_time_str = "执行时间"
     Category_str = "类型"
-    Style_str = "款数"
+    Style_count_str = "款数"
     Importance_str = "重要程度（1-5级别)"
     Position_str = "位置"
 
@@ -50,6 +50,7 @@ class DataLoader(object):
         self.name_dict = dict()
         self.props_dict = dict()
         self.display_clothing_dict = dict()
+        self.second_props_num_dict = dict()
         self.file_name = origin_csv_path.split("/")[-1].split(".")[0]
 
         self.clothing_property = pd.read_csv(os.getcwd() + "/data/details/20181024/clothing_property_utf8.csv")
@@ -88,7 +89,7 @@ class DataLoader(object):
                     # name = name.split("￥")[0]
 
                 for plan_property in [self.Sex_str, self.Season_str, self.Execute_time_str, self.Category_str,
-                                      self.Position_str, self.Style_str, self.Importance_str]:
+                                      self.Position_str, self.Style_count_str, self.Importance_str]:
                     if plan_property == self.Sex_str:
                         self.display_clothing_dict[name][plan_property] = self.Sex_dict[
                             self.display_clothing.loc[i][plan_property]]
@@ -107,13 +108,15 @@ class DataLoader(object):
                         else:
                             position = [position]
                         self.display_clothing_dict[name][plan_property] = position
-                    elif plan_property == self.Style_str:
+                    elif plan_property == self.Style_count_str:
                         if len(self.display_clothing.loc[i][plan_property].split("-")) == 2:
                             self.display_clothing_dict[name][plan_property] = [int(i) for i in self.display_clothing.loc[i][plan_property].split("-")]
                         else:
                             self.display_clothing_dict[name][plan_property] = [
                                 int(self.display_clothing.loc[i][plan_property]), int(self.display_clothing.loc[i][plan_property])]
                     elif plan_property == self.Importance_str:
+                        self.display_clothing_dict[name][plan_property] = self.display_clothing.loc[i][plan_property]
+                    elif plan_property == self.Season_str:
                         self.display_clothing_dict[name][plan_property] = self.display_clothing.loc[i][plan_property]
             # print(self.display_clothing_dict)
             # exit()
@@ -164,8 +167,6 @@ class DataLoader(object):
 
                     self.etl_pd.at[i, j] = str(self.etl_pd.loc[i][j]).split(":")[0]
                     self.encode_pd.at[i, j] = str(self.etl_pd.loc[i][j]).split(":")[0]
-                if len(self.props_dict[i][j]) == 0:
-                    self.props_dict[i][j]["."] = ["墙面"]
 
                 # print("after", str(self.etl_pd.loc[i][j]).find(":") != -1, self.encode_pd.loc[i][j])
 
@@ -179,8 +180,10 @@ class DataLoader(object):
                     self.encode_pd.at[i, j] = []
                     for m in str(self.etl_pd.loc[(i, j)]).split("/"):
                         self.encode_pd.loc[(i, j)].append([self.name_dict[n]["index"] for n in m.split("&")])
+                    if len(self.props_dict[i][j]) == 0:
+                        self.props_dict[i][j]["."] = ["墙面"]
                 elif self.etl_pd.loc[(i, j)] in ENTITY_DICT:
-                    self.result_pd.at[i, j] = ENTITY_DICT[self.etl_pd.loc[i][j]]
+                    # self.result_pd.at[i, j] = ENTITY_DICT[self.etl_pd.loc[i][j]]
                     self.encode_pd.at[i, j] = ENTITY_DICT[self.etl_pd.loc[i][j]]
                 else:
                     if isinstance(self.etl_pd.loc[(i, j)], str) and self.etl_pd.loc[i][j] != "0":

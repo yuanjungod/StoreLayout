@@ -63,7 +63,7 @@ FESTIVAL_TERMS = {
 }
 
 CONTEXT_DICT = {
-    "season": "春",
+    "season": ["深秋冬", "深秋"],
     "solar": "寒露",
     "rain": 5,
     "economics": 5,

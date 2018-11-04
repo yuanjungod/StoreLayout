@@ -40,11 +40,24 @@ class BoxAnalyseStrategy(object):
         result_box_dict = {}
         if self.data_list is None:
             self.get_all_data(root_path)
+        category_dict = self.data_list[0].category_dict
         for encode_pd in self.data_list:
             index_divide = self.get_divide_partition(encode_pd.encode_pd.shape[0] + 1, divide_count=INDEX_DIVIDE)
             column_divide = self.get_divide_partition(encode_pd.encode_pd.shape[1] + 1, divide_count=COLUMN_DIVIDE)
-            cash_orientation = self.get_value_index_column(encode_pd.encode_pd, 10009)
-            if sum([i[1] for i in cash_orientation]) / len(cash_orientation) < len(encode_pd.encode_pd.loc[0]) / 2:
+            # cash_orientation = self.get_value_index_column(encode_pd.encode_pd, 10009)
+
+            sex_orientation = -1
+            for i in range(len(encode_pd.encode_pd.loc[0])):
+                for j in range(len(encode_pd.encode_pd.index)):
+                    if isinstance(encode_pd.encode_pd.loc[j][i], list):
+                        for k in encode_pd.encode_pd.loc[j][i]:
+                            sex_orientation = category_dict.get(k[0], {}).get("sex", -1)
+                            if sex_orientation != -1:
+                                break
+                if sex_orientation != -1:
+                    break
+
+            if sex_orientation == 1:
                 for index in range(INDEX_DIVIDE):
                     if index not in result_box_dict:
                         result_box_dict[index] = dict()
