@@ -521,7 +521,7 @@ class LayoutManager(object):
         self.merge_residue(values, mean_cell_style_count)
 
         for value in values:
-            print("after", value["name"], value["count"], value["current_cell_num"])
+            # print("after", value["name"], value["count"], value["current_cell_num"])
             if value["current_cell_num"] == 0:
                 print("not be set", value["name"], value["count"])
 
@@ -610,11 +610,6 @@ class LayoutManager(object):
 
         self.alloc_pos(display_clothing_dict)
 
-        for key, value in display_clothing_dict.items():
-            # print(key, value[DataLoader.Position_str], value["current_cell_num"], value["墙面alloc"])
-            # exit()
-            pass
-
         boy_clothing = list()
         girl_clothing = list()
         for key, value in display_clothing_dict.items():
@@ -659,8 +654,13 @@ class LayoutManager(object):
                         result_name = "/".join(result_list)
                         if len(self.data_loader.props_dict[index][column]) > 0 and "." not in \
                                 self.data_loader.props_dict[index][column]:
-                            for item in self.data_loader.props_dict[index][column]:
-                                result_name += "%s%s" % (item, self.data_loader.props_dict[index][column][item])
+                            if ":" in self.data_loader.props_dict[index][column]:
+                                result_name += "%s%s" % (":", self.data_loader.props_dict[index][column][":"])
+                            if "*" in self.data_loader.props_dict[index][column]:
+                                result_name += "%s%s" % ("*", self.data_loader.props_dict[index][column]["*"])
+                            if "￥" in self.data_loader.props_dict[index][column]:
+                                result_name += "%s%s" % ("￥", self.data_loader.props_dict[index][column]["￥"])
+
                         return result_name
 
                     self.data_loader.result_pd.at[index_length - j, fix_i] = get_result_list(index_length - j, fix_i)
