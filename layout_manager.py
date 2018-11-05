@@ -128,10 +128,8 @@ class LayoutManager(object):
                     else:
                         man_wall_cell_count += count
 
-        print("man_wall_cell_count", man_wall_cell_count)
-        print("women_wall_cell_count", women_wall_cell_count)
-        # print(self.data_loader.encode_pd)
-        # exit()
+        # print("man_wall_cell_count", man_wall_cell_count)
+        # print("women_wall_cell_count", women_wall_cell_count)
 
         values = list(layout_clothing_dict.values())
 
@@ -185,12 +183,12 @@ class LayoutManager(object):
                     a["墙面alloc"] - a["wall_already_allocation_info"] > 0:
                 score -= 10**11
 
-            if depth - index < depth/3 and a[DataLoader.Importance_str] in [4, 5]:
-                score -= (10**10)*a[DataLoader.Importance_str]
-            elif depth - index >= 2*depth/3 and a[DataLoader.Importance_str] in [4, 5]:
-                score += (10**10)*a[DataLoader.Importance_str]
-            if depth - index < depth/3 and a[DataLoader.Season_str] not in context["season"]:
-                score -= 10**9
+            if depth - index < depth/2 and a[DataLoader.Importance_str] in [4, 5] and \
+                    a[DataLoader.Season_str] not in context["season"]:
+                score -= (10**9)*a[DataLoader.Importance_str]
+            elif depth - index >= depth/2 and a[DataLoader.Importance_str] in [4, 5] and \
+                    a[DataLoader.Season_str] not in context["season"]:
+                score += (10**9)*a[DataLoader.Importance_str]
 
             return score
 
@@ -232,7 +230,7 @@ class LayoutManager(object):
         return clothing_name
 
     def get_layout_clothing(self, plan, total_cell_count):
-        print("before plan", plan)
+        # print("before plan", plan)
         layout_clothing_dict = dict()
         star_clothing_dict = dict()
         display_clothing = copy.deepcopy(self.data_loader.display_clothing_dict)
@@ -275,7 +273,7 @@ class LayoutManager(object):
                     # print("fu14", value[DataLoader.Style_str])
                     plan[self.Man_upper_body_str] -= value[DataLoader.Style_count_str][0]
 
-        print("after plan", plan)
+        # print("after plan", plan)
 
         display_clothing_list = list()
         for i in display_clothing:
@@ -295,7 +293,7 @@ class LayoutManager(object):
                 if root_category in self.Pants_category_list and sex == 0 else 0
             display_clothing_list.append(display_clothing[i])
 
-        print(plan)
+        # print(plan)
         first_circle = True
         while sum(plan.values()) > 0:
             # print("fuck!!!!!fuck!!!!!fuck!!!!!", sum(plan.values()), plan[self.Man_upper_body_str],
@@ -506,17 +504,17 @@ class LayoutManager(object):
             if "current_cell_num" not in value:
                 value["current_cell_num"] = 0
         total_cell = self.calculate() + sum([value["current_cell_num"] for value in values])
-        print("total_cell", total_cell)
+        # print("total_cell", total_cell)
         mean_cell_style_count = sum([value["count"] for key, value in layout_clothing_dict.items()]) / total_cell
         remain_cell = total_cell - sum([value["current_cell_num"] for value in values])
-        print("remain_cell", remain_cell, mean_cell_style_count)
+        # print("remain_cell", remain_cell, mean_cell_style_count)
         # remain_cell = 10  # test
         while remain_cell > 0:
             values.sort(key=lambda a: (a["count"] - a["current_cell_num"]*mean_cell_style_count)*100 + a[
                 DataLoader.Importance_str], reverse=True)
             values[0]["current_cell_num"] += 1
             remain_cell -= 1
-        print("all", sum([value["current_cell_num"] for value in values]))
+        # print("all", sum([value["current_cell_num"] for value in values]))
 
         self.merge_residue(values, mean_cell_style_count)
 
@@ -600,11 +598,11 @@ class LayoutManager(object):
 
         total_cell = self.calculate()
 
-        print("total_cell", total_cell, csv_path)
+        # print("total_cell", total_cell, csv_path)
 
         display_clothing_dict, star = self.get_layout_clothing(self.shop_property_dict[csv_path.split("/")[-1].split(".")[0]], total_cell)
 
-        print("sum", sum([display_clothing_dict[i]["count"] for i in display_clothing_dict]))
+        # print("sum", sum([display_clothing_dict[i]["count"] for i in display_clothing_dict]))
 
         self.allocation_cell_count(display_clothing_dict)
 
