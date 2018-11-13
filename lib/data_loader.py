@@ -20,7 +20,7 @@ class DataLoader(object):
     Style_count_str = "款数"
     Importance_str = "重要程度（1-5级别)"
     Position_str = "位置"
-
+    Order_value_str = "order_value"
     Date_format_str = "%Y年%m月%d日"
 
     def __init__(self):
@@ -36,6 +36,7 @@ class DataLoader(object):
         self.props_dict = dict()
         self.second_props_num_dict = dict()
         self.props_item_dict = dict()
+        self.bit_map = dict()
         self.file_name = None
 
     def load_csv(self, origin_csv_path, plan_csv_path=None):
@@ -49,6 +50,8 @@ class DataLoader(object):
         self.category_dict = dict()
         self.name_dict = dict()
         self.props_dict = dict()
+        self.props_item_dict = dict()
+        self.bit_map = dict()
         self.display_clothing_dict = dict()
         self.second_props_num_dict = dict()
         self.file_name = origin_csv_path.split("/")[-1].split(".")[0]
@@ -57,7 +60,11 @@ class DataLoader(object):
         # print(self.clothing_property.loc[0])
         for i in self.clothing_property.index:
             # print(i, self.clothing_property.loc[i][0])
-            self.category_dict[i] = {
+            j = i
+            if self.clothing_property.loc[i][1] == "矩框":
+                j = 100000
+
+            self.category_dict[j] = {
                 "name": self.clothing_property.loc[i][1],
                 "sex": self.Sex_dict[self.clothing_property.loc[i][2]],
                 "season": self.Season_dict[self.clothing_property.loc[i][3]],
@@ -65,7 +72,7 @@ class DataLoader(object):
                 "category": self.clothing_property.loc[i][5].split("&")
             }
             self.name_dict[self.clothing_property.loc[i][1]] = {
-                "index": i,
+                "index": j,
                 "sex": self.Sex_dict[self.clothing_property.loc[i][2]],
                 "season": self.Season_dict[self.clothing_property.loc[i][3]],
                 "date": datetime.datetime.strptime(self.clothing_property.loc[i][4], self.Date_format_str),
@@ -79,6 +86,8 @@ class DataLoader(object):
             for i in self.display_clothing.index:
                 name = "%s%s" % (self.display_clothing.loc[i]["性别"], self.display_clothing.loc[i]["品名"])
                 self.display_clothing_dict[name] = dict()
+                self.display_clothing_dict[name][self.Order_value_str] = 1000 - i
+
                 if name.find("*") != -1:
                     # self.display_clothing_dict[name.split("*")[0]] = dict()
                     self.display_clothing_dict[name]["*"] = 1
@@ -139,6 +148,8 @@ class DataLoader(object):
             for j in range(len(self.etl_pd.loc[i])):
                 self.props_dict[i][j] = dict()
                 # print("before", self.etl_pd.loc[i][j], self.encode_pd.loc[i][j])
+                if str(self.etl_pd.loc[i][j]).find("星墙") != -1:
+                    self.props_dict[i][j]["."] = ["墙面"]
                 if str(self.etl_pd.loc[i][j]).find("￥") != -1:
                     self.props_dict[i][j]["￥"] = str(self.etl_pd.loc[i][j]).split("￥")[-1]
 
@@ -175,6 +186,26 @@ class DataLoader(object):
                     category_info_list.extend(k.split("&"))
                 common_set = set(category_info_list) & set(self.name_dict.keys())
                 if self.etl_pd.loc[(i, j)] in self.name_dict or len(list(common_set)) > 0:
+                    if self.etl_pd.loc[(i, j)] == "矩框":
+                        continue
+                    if i not in self.bit_map:
+                        self.bit_map[i] = dict()
+                    if j not in self.bit_map[i]:
+                        self.bit_map[i][j] = dict()
+
+                    key = self.etl_pd.loc[(i, j)] if self.etl_pd.loc[(i, j)] in self.name_dict else list(common_set)[-1]
+                    if key == "矩框":
+                        # print("fuck!!!")
+                        # print(self.etl_pd.loc[(i, j)], list(common_set))
+                        key = list(common_set)[0]
+
+                    # self.bit_map[i][j]["sex"] = self.name_dict[key]["sex"]
+                    if str(self.etl_pd.loc[i][j]).find("男") != -1 or str(self.etl_pd.loc[i][j]).find("女") != -1:
+                        self.bit_map[i][j]["sex"] = 1 if str(self.etl_pd.loc[i][j]).find("男") != -1 else 0
+                    else:
+                        self.bit_map[i][j]["sex"] = self.name_dict[key]["sex"]
+                        # print("not contain sex")
+                    self.bit_map[i][j]["category"] = self.name_dict[key]["category"]
                     self.result_pd.loc[(i, j)] = -1
 
                     self.encode_pd.at[i, j] = []
