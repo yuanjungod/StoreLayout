@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5f69cc22-92d2-4390-88c1-dfeea483be6e" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/test_base64.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/layout_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/layout_manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data_loader.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,10 +12,10 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/StoreLayout$pytest_in_test_base64_py.coverage" NAME="pytest in test_base64.py Coverage Results" MODIFIED="1541557835832" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/StoreLayout$convert_file_coding.coverage" NAME="convert_file_coding Coverage Results" MODIFIED="1541495243804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tools" />
+    <SUITE FILE_PATH="coverage/StoreLayout$convert_file_coding.coverage" NAME="convert_file_coding Coverage Results" MODIFIED="1542166534507" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tools" />
     <SUITE FILE_PATH="coverage/StoreLayout$box_analyze_strategy.coverage" NAME="box_analyze_strategy Coverage Results" MODIFIED="1542103408808" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/lib" />
     <SUITE FILE_PATH="coverage/StoreLayout$data_loader.coverage" NAME="data_loader Coverage Results" MODIFIED="1542084198861" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/lib" />
-    <SUITE FILE_PATH="coverage/StoreLayout$layout_manager.coverage" NAME="layout_manager Coverage Results" MODIFIED="1542115411032" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/StoreLayout$layout_manager.coverage" NAME="layout_manager Coverage Results" MODIFIED="1542173900019" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="-272025996">
@@ -38,58 +34,70 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="csv" value="109" />
+          <entry key="csv" value="110" />
           <entry key="md" value="2" />
-          <entry key="py" value="26" />
+          <entry key="py" value="27" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Markdown" value="1" />
-          <entry key="PLAIN_TEXT" value="110" />
-          <entry key="Python" value="26" />
+          <entry key="PLAIN_TEXT" value="111" />
+          <entry key="Python" value="27" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="csv" value="539" />
           <entry key="dummy" value="6" />
-          <entry key="py" value="23010" />
+          <entry key="py" value="25029" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="545" />
-          <entry key="Python" value="23010" />
+          <entry key="Python" value="25029" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/layout_manager.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="522">
-              <caret line="1011" column="7" selection-start-line="1011" selection-start-column="7" selection-end-line="1011" selection-end-column="7" />
+            <state relative-caret-position="257">
+              <caret line="786" lean-forward="true" selection-start-line="786" selection-end-line="786" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
-                <marker date="1542115150354" expanded="true" signature="3098:9174" ph="..." />
-                <marker date="1542115150354" expanded="true" signature="10373:10379" ph="..." />
-                <marker date="1542115150354" expanded="true" signature="29938:29947" ph="..." />
-                <marker date="1542115150354" expanded="true" signature="36929:37190" ph="..." />
-                <marker date="1542115150354" expanded="true" signature="42901:42907" ph="..." />
-                <marker date="1542115150354" expanded="true" signature="42959:42968" ph="..." />
+                <element signature="e#35760#39184#0" />
+                <marker date="1542174112215" expanded="true" signature="3098:9174" ph="..." />
+                <marker date="1542174112215" expanded="true" signature="10373:10379" ph="..." />
+                <marker date="1542174112215" expanded="true" signature="30370:30379" ph="..." />
+                <marker date="1542174112215" expanded="true" signature="37446:37707" ph="..." />
+                <marker date="1542174112215" expanded="true" signature="43424:43430" ph="..." />
+                <marker date="1542174112215" expanded="true" signature="43482:43491" ph="..." />
+                <marker date="1542174112215" expanded="true" signature="52567:52577" ph="..." />
+                <marker date="1542174112215" expanded="true" signature="52747:52756" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data/details/20181024/utf8_files/高县.csv">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="17" column="46" selection-start-line="17" selection-start-column="46" selection-end-line="17" selection-end-column="46" />
+            <state relative-caret-position="357">
+              <caret line="21" column="33" lean-forward="true" selection-start-line="21" selection-start-column="33" selection-end-line="21" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tools/convert_file_coding.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -106,8 +114,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/data_loader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2551">
-              <caret line="65" lean-forward="true" selection-start-line="65" selection-end-line="65" />
+            <state relative-caret-position="199">
+              <caret line="190" column="44" selection-start-line="190" selection-start-column="37" selection-end-line="190" selection-end-column="44" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data/plan/2018_15_plan_utf8.csv">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-186">
+              <caret line="14" column="35" lean-forward="true" selection-start-line="14" selection-start-column="35" selection-end-line="14" selection-end-column="35" />
             </state>
           </provider>
         </entry>
@@ -116,20 +133,8 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>what!!!</find>
-      <find>err</find>
-      <find>男薄棉外套&amp;呢外套</find>
-      <find>recurrent</find>
-      <find>what a fuck</find>
-      <find>薄棉外套</find>
-      <find>开衫毛衣&amp;深秋毛衣</find>
-      <find>女薄棉外套</find>
-      <find>未知</find>
-      <find>呢外套</find>
       <find>男59元毛衣</find>
-      <find>what a fuck@@@@@</find>
       <find>init</find>
-      <find>Style_count_str</find>
       <find>男羽绒服</find>
       <find>矩</find>
       <find>羽绒服</find>
@@ -137,7 +142,6 @@
       <find>list</find>
       <find>14</find>
       <find>1-3</find>
-      <find>display_clothing_list</find>
       <find>90</find>
       <find>抓绒针织裤</find>
       <find>棉外套</find>
@@ -146,6 +150,19 @@
       <find>衬衣</find>
       <find>牛九喇叭</find>
       <find>女特殊1</find>
+      <find>display_clothing_list</find>
+      <find>print</find>
+      <find>recurrent</find>
+      <find>59元毛衣</find>
+      <find>39元打底衫</find>
+      <find>what a fuck@@@@@</find>
+      <find>merge_residue</find>
+      <find>Style_count_str</find>
+      <find>女抓绒卫衣&amp;棉背心&amp;卫衣</find>
+      <find>nainaide</find>
+      <find>bit</find>
+      <find>fixed_settle</find>
+      <find>modify_need_sort_wall</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -196,8 +213,8 @@
         <option value="$PROJECT_DIR$/data/details/20181024/utf8_files/大英.csv" />
         <option value="$PROJECT_DIR$/lib/data_loader.py" />
         <option value="$PROJECT_DIR$/data/details/20181024/clothing_property_utf8.csv" />
-        <option value="$PROJECT_DIR$/layout_manager.py" />
         <option value="$PROJECT_DIR$/data/details/20181024/utf8_files/高县.csv" />
+        <option value="$PROJECT_DIR$/layout_manager.py" />
       </list>
     </option>
   </component>
@@ -207,9 +224,9 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="85" />
-    <option name="y" value="24" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="8" />
+    <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="831" />
   </component>
@@ -454,10 +471,10 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.convert_file_coding" />
         <item itemvalue="Python.box_analyze_strategy" />
         <item itemvalue="Python.data_loader" />
         <item itemvalue="Python tests.pytest in test_base64.py" />
-        <item itemvalue="Python.convert_file_coding" />
         <item itemvalue="Python.print_test" />
       </list>
     </recent_temporary>
@@ -490,22 +507,22 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="24" width="1440" height="831" extended-state="6" />
+    <frame x="2" y="24" width="1440" height="831" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49905482" visible="true" weight="0.19241774" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49905482" visible="true" weight="0.19241774" />
       <window_info id="Structure" order="1" sideWeight="0.50094515" side_tool="true" weight="0.2546495" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="Query Editor" order="3" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32891566" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.54533154" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32882273" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.44248986" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32891566" />
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.32891566" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.5615697" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.5290934" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.32891566" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.32891566" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
@@ -680,13 +697,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tools/convert_file_coding.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/data/result/西充.csv">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -752,13 +762,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/plan/2018_15_plan_utf8.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="49" selection-start-line="7" selection-start-column="46" selection-end-line="7" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/box_analyze_strategy.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
@@ -783,33 +786,50 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/data/details/20181024/utf8_files/高县.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="21" column="33" lean-forward="true" selection-start-line="21" selection-start-column="33" selection-end-line="21" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/plan/2018_15_plan_utf8.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-186">
+          <caret line="14" column="35" lean-forward="true" selection-start-line="14" selection-start-column="35" selection-end-line="14" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tools/convert_file_coding.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/data_loader.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2551">
-          <caret line="65" lean-forward="true" selection-start-line="65" selection-end-line="65" />
+        <state relative-caret-position="199">
+          <caret line="190" column="44" selection-start-line="190" selection-start-column="37" selection-end-line="190" selection-end-column="44" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/layout_manager.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="522">
-          <caret line="1011" column="7" selection-start-line="1011" selection-start-column="7" selection-end-line="1011" selection-end-column="7" />
+        <state relative-caret-position="257">
+          <caret line="786" lean-forward="true" selection-start-line="786" selection-end-line="786" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <marker date="1542115150354" expanded="true" signature="3098:9174" ph="..." />
-            <marker date="1542115150354" expanded="true" signature="10373:10379" ph="..." />
-            <marker date="1542115150354" expanded="true" signature="29938:29947" ph="..." />
-            <marker date="1542115150354" expanded="true" signature="36929:37190" ph="..." />
-            <marker date="1542115150354" expanded="true" signature="42901:42907" ph="..." />
-            <marker date="1542115150354" expanded="true" signature="42959:42968" ph="..." />
+            <element signature="e#35760#39184#0" />
+            <marker date="1542174112215" expanded="true" signature="3098:9174" ph="..." />
+            <marker date="1542174112215" expanded="true" signature="10373:10379" ph="..." />
+            <marker date="1542174112215" expanded="true" signature="30370:30379" ph="..." />
+            <marker date="1542174112215" expanded="true" signature="37446:37707" ph="..." />
+            <marker date="1542174112215" expanded="true" signature="43424:43430" ph="..." />
+            <marker date="1542174112215" expanded="true" signature="43482:43491" ph="..." />
+            <marker date="1542174112215" expanded="true" signature="52567:52577" ph="..." />
+            <marker date="1542174112215" expanded="true" signature="52747:52756" ph="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/details/20181024/utf8_files/高县.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="46" selection-start-line="17" selection-start-column="46" selection-end-line="17" selection-end-column="46" />
         </state>
       </provider>
     </entry>

@@ -241,8 +241,9 @@ class LayoutManager(object):
         clothing = self.internal_sort(clothing_list, context, index, column)
 
         if "." in self.data_loader.props_dict[index][column]:
-            print("clothing0", clothing[0]["name"], clothing[0][DataLoader.Position_str],
-                  clothing[0]["count"], clothing[0]["already_allocation_info"][0])
+            # print("clothing0", clothing[0]["name"], clothing[0][DataLoader.Position_str],
+            #       clothing[0]["count"], clothing[0]["already_allocation_info"][0])
+            pass
 
         if rank >= len(clothing):
             best_one = clothing[-1]
@@ -319,7 +320,8 @@ class LayoutManager(object):
             elif len(display_clothing[i][DataLoader.Position_str]) > 1 and \
                     "墙面" == display_clothing[i][DataLoader.Position_str][1]:
                 wall = 1
-            island = 1 if "墙面" not in display_clothing[i][DataLoader.Position_str] else 0
+            # island = 1 if "墙面" not in display_clothing[i][DataLoader.Position_str] else 0
+            island = 1 if "中岛" in display_clothing[i][DataLoader.Position_str] else 0
             for clothing_property in [self.Man_wall_upper_body_str, self.Man_island_upper_body_str,
                                       self.Man_wall_pants_str, self.Man_island_pants_str,
                                       self.Woman_wall_upper_body_str, self.Woman_island_upper_body_str,
@@ -432,7 +434,7 @@ class LayoutManager(object):
             ready = False
             display_clothing_list.sort(key=lambda a: (5-a[DataLoader.Importance_str])*100 + 10**10 if 4*a[
                 "count"] - sum(a[DataLoader.Style_count_str]) < 0 else sum(a[DataLoader.Style_count_str])-4*a["count"])
-            print("display_clothing_list", display_clothing_list[0]["name"], display_clothing_list[0][DataLoader.Style_count_str], display_clothing_list[0]["count"])
+            # print("display_clothing_list", display_clothing_list[0]["name"], display_clothing_list[0][DataLoader.Style_count_str], display_clothing_list[0]["count"])
             for i in display_clothing_list:
 
                 can_use = False
@@ -520,7 +522,7 @@ class LayoutManager(object):
                             a = display_clothing_list[i]
 
                             a["sort_important"] += 1
-                            print("recurrent", a["name"], a["count"], a["threshold_value"])
+                            # print("recurrent", a["name"], a["count"], a["threshold_value"])
                             a["count"] += 1
                             plan[clothing_property] -= 1
                             a["threshold_value"] -= 1
@@ -531,7 +533,9 @@ class LayoutManager(object):
             if i[self.Man_wall_upper_body_str] > 0 or i[self.Man_wall_pants_str] > 0 or i[self.Woman_wall_upper_body_str] > 0 and i[self.Women_wall_pants_str] > 0:
                 print("what a fuck", i["name"], i["count"])
 
+        display_clothing_list.sort(key=lambda a: (5 - a[DataLoader.Importance_str])*1000+sum(a[DataLoader.Style_count_str]), reverse=True)
         for i in display_clothing_list:
+            # print("nainaide", i["name"], i[DataLoader.Importance_str], i[DataLoader.Style_count_str], (5 - i[DataLoader.Importance_str])*1000+sum(i[DataLoader.Style_count_str]))
             for clothing_property in [self.Man_island_upper_body_str, self.Man_island_pants_str,
                                       self.Woman_island_upper_body_str, self.Women_island_pants_str]:
                 if i[clothing_property] > 0 and plan[clothing_property] > 0 and i["count"] == 0:
@@ -624,8 +628,11 @@ class LayoutManager(object):
                                 # print("current_cell_num", display)
 
         # print(self.data_loader.result_pd)
+        self.merge_residue(display_clothing_list)
+
         for i in display_clothing_list:
-            if i["count"] > 1:
+            # if i["count"] > 1:
+            if i["count"] == 0:
                 print("what a fuck@@@@@", i["name"], i["count"])
 
         for i in display_clothing_list:
@@ -701,7 +708,7 @@ class LayoutManager(object):
                 print("not be set", value["name"], value["count"])
 
     @classmethod
-    def merge_residue(cls, values, mean_cell_style_count):
+    def merge_residue(cls, values):
 
         def sort_value(a, current_value):
             score = 0
@@ -709,31 +716,30 @@ class LayoutManager(object):
             for i in range(min(len(a[DataLoader.Category_str]), len(current_value[DataLoader.Category_str]))):
                 if a[DataLoader.Category_str][i] == current_value[DataLoader.Category_str][i]:
                     score += (10**8)/(10**i)
-            score += (a["count"] - a["current_cell_num"]*mean_cell_style_count)*100
             return score
 
         not_set_values = list()
         for i in range(len(values)):
-            if values[i]["current_cell_num"] == 0:
+            if values[i]["count"] == 0:
                 not_set_values.append(values[i])
         for value in not_set_values:
             values.remove(value)
         for value in not_set_values:
             values.sort(key=lambda a: sort_value(a, value), reverse=True)
-
-            for i in range(len(values)):
-                anchor_value = values[i]
-                if anchor_value["current_cell_num"] >= 2:
-
-                    anchor_value["current_cell_num"] -= 1
-                    value["current_cell_num"] = 1
-                    if anchor_value["current_cell_num"] == 2 and len(value["name"].split("&")) == 1:
-                        value["current_cell_num"] = 1
-                        value["name"] = values[0]["name"].split("*")[0].split("￥")[0] + "&" + value["name"]
-                        value[DataLoader.Category_str] = anchor_value[DataLoader.Category_str]
-                    break
-        for value in not_set_values:
-            values.append(value)
+            anchor_value = values[0]
+            if len(anchor_value["name"].split("￥")) > 1:
+                item = "￥"
+                anchor_value["name"] = anchor_value["name"].split(item)[0] + "&" + value["name"] + \
+                                       item + anchor_value["name"].split(item)[1]
+            elif len(anchor_value["name"].split("*")) > 1:
+                item = "*"
+                anchor_value["name"] = anchor_value["name"].split(item)[0] + "&" + value["name"] + \
+                                       item + anchor_value["name"].split(item)[1]
+            else:
+                anchor_value["name"] = anchor_value["name"].split(":")[0] + "&" + value["name"]
+            print("nainaide", anchor_value["name"], value["name"])
+        # for value in not_set_values:
+        #     values.append(value)
 
     def layout_star(self):
         for i in self.data_loader.props_dict:
@@ -779,11 +785,7 @@ class LayoutManager(object):
 
         total_cell = self.calculate()
 
-        # print("total_cell", total_cell, csv_path)
-
         display_clothing_dict, star = self.get_layout_clothing(self.shop_property_dict, total_cell)
-
-        # self.allocation_cell_count(display_clothing_dict)
 
         clothing_list = list()
         for key, value in display_clothing_dict.items():
@@ -884,27 +886,22 @@ class LayoutManager(object):
                             big_search_fix_i_neighbor += 1
                         else:
                             break
+
         self.resort()
+
+        self.reassign_prop()
 
         self.data_loader.result_pd.to_csv(
             os.getcwd() + "/data/result/" + "%s.csv" % csv_path.split("/")[-1].split(".")[0])
         print("保存至[%s" % os.getcwd() + "/data/result/" + "%s.csv]" % csv_path.split("/")[-1].split(".")[0])
 
-    def resort(self):
-        fixed_settle = set()
-        for name, value in self.data_loader.display_clothing_dict.items():
-            if name.find("*") != -1:
-                fixed_settle.add("男" if value[DataLoader.Sex_str] == 1 else "女" + value[DataLoader.Position_str][0])
-            elif name.find("￥") != -1:
-                fixed_settle.add(value[DataLoader.Position_str][1])
-        print("fixed_settle", fixed_settle)
-
-        # no wall
+    def island_sorted(self, sex):
         for i in range(0, len(self.data_loader.result_pd.loc[0])):
             sorted_list = list()
             a = self.data_loader.result_pd[i]
             for j in range(len(a)):
-                if isinstance(a[j], list) and "." not in self.data_loader.props_dict[j][i]:
+                if isinstance(a[j], list) and "." not in self.data_loader.props_dict[j][i]\
+                        and self.data_loader.bit_map[j][i]["sex"] == sex:
                     sorted_list.append(a[j])
                     a[j] = [-1, a[j][0].split(":")[1]]
             sorted_list.sort(key=lambda a: a[1][0])
@@ -912,95 +909,128 @@ class LayoutManager(object):
                 for j in range(len(a)):
                     if isinstance(a[j], list) and a[j][0] == -1:
                         a[j] = [item[0].split(":")[0]+":"+a[j][1], item[1], item[2]]
-                        # a[j] = item[0].split(":")[0]+":"+a[j][1]
                         break
 
-        ################## left wall ##################
+    def modify_need_sort_wall(self, i, sorted_dict):
+        a = self.data_loader.result_pd[i]
+        for j in range(len(a)):
+            if isinstance(a[j], list) and "." in self.data_loader.props_dict[j][i]:
+                if str(a[j][0]) == "矩框":
+                    continue
+                clothing = a[j][0].split("/")[0]
+                if clothing == "矩框":
+                    clothing = a[j][0].split("/")[1]
+
+                if clothing not in sorted_dict:
+                    sorted_dict[clothing] = {
+                        "count": 0, "score": a[j][1][0],
+                        "category": a[j][2][0][0]}
+                sorted_dict[clothing]["count"] += 1
+                if len(a[j][0].split("/")) > 1:
+                    a[j] = ["矩框", -1]
+                else:
+                    a[j] = [-1]
+
+    def modify_sort_wall(self, a, i, j, sorted_list):
+        if isinstance(a[j], list) and "." in self.data_loader.props_dict[i][j]:
+            item = sorted_list[0]
+
+            if a[j][0] == -1:
+                a[j] = item[0]
+            else:
+                a[j] = "/".join(["矩框", item[0]])
+                print(a[j])
+            item[1]["count"] -= 1
+            if item[1]["count"] < 1:
+                sorted_list.remove(item)
+
+    def resort(self):
+
+        # men island sort
+        self.island_sorted(1)
+        # women island sort
+        self.island_sorted(0)
+
+        # left wall
         sorted_dict = dict()
-
         for i in range(0, int(len(self.data_loader.result_pd.loc[0])/2)):
-            a = self.data_loader.result_pd[i]
-            for j in range(len(a)):
-                if isinstance(a[j], list) and "." in self.data_loader.props_dict[j][i]:
-                    if str(a[j][0]) == "矩框":
-                        continue
-                    clothing = a[j][0].split("/")[0]
-                    if clothing == "矩框":
-                        clothing = a[j][0].split("/")[1]
-
-                    if clothing not in sorted_dict:
-                        sorted_dict[clothing] = {
-                                        "count": 0, "score": a[j][1][0],
-                                        "category": a[j][2][0][0]}
-                    sorted_dict[clothing]["count"] += 1
-                    if len(a[j][0].split("/")) > 1:
-                        a[j] = ["矩框", -1]
-                    else:
-                        a[j] = [-1]
+            self.modify_need_sort_wall(i, sorted_dict)
 
         sorted_list = list(sorted_dict.items())
-
         sorted_list.sort(key=lambda a: a[1]["score"] + [10000 if "上衣" in a[1]["category"] else 0][0])
-        print("sorted_list", sorted_list)
 
-        for i in range(0, int(len(self.data_loader.result_pd.loc[0])/2)):
-            a = self.data_loader.result_pd[i]
-            for j in range(len(a)):
-                if isinstance(a[j], list) and "." in self.data_loader.props_dict[j][i]:
-                    # print(a[j], i, j)
-                    item = sorted_list[0]
+        print("left wall sorted_list", sorted_list)
 
-                    if a[j][0] == -1:
-                        a[j] = item[0]
-                    else:
-                        a[j] = "/".join(["矩框", item[0]])
-                        print(a[j])
-                    item[1]["count"] -= 1
-                    if item[1]["count"] < 1:
-                        sorted_list.remove(item)
-        print("sorted_list", sorted_list)
+        for i in range(len(self.data_loader.result_pd.index)):
+            a = self.data_loader.result_pd.loc[i]
+            for j in range(int(len(self.data_loader.result_pd.loc[0])/2)-1, -1, -1):
+                self.modify_sort_wall(a, i, j, sorted_list)
+        print("left wall sorted_list", sorted_list)
 
         # right wall
         sorted_dict = dict()
         for i in range(int(len(self.data_loader.result_pd.loc[0]) / 2), len(self.data_loader.result_pd.loc[0])):
-            a = self.data_loader.result_pd[i]
-            for j in range(len(a)):
-                if isinstance(a[j], list) and "." in self.data_loader.props_dict[j][i]:
-                    if str(a[j][0]) == "矩框":
-                        continue
-                    clothing = a[j][0].split("/")[0]
-                    if clothing == "矩框":
-                        clothing = a[j][0].split("/")[1]
-                    if clothing not in sorted_dict:
-                        sorted_dict[clothing] = {
-                            "count": 0, "score": a[j][1][0],
-                            "category": a[j][2][0][0]}
-                    sorted_dict[clothing]["count"] += 1
-                    if len(a[j][0].split("/")) > 1:
-                        a[j] = ["矩框", -1]
-                    else:
-                        a[j] = [-1]
+            self.modify_need_sort_wall(i, sorted_dict)
 
         sorted_list = list(sorted_dict.items())
         sorted_list.sort(key=lambda a: a[1]["score"] + [10000 if "上衣" in a[1]["category"] else 0][0])
-        print("sorted_list", sorted_list)
 
-        for i in range(int(len(self.data_loader.result_pd.loc[0]) / 2), len(self.data_loader.result_pd.loc[0])):
-            a = self.data_loader.result_pd[i]
-            for j in range(len(a)):
-                if isinstance(a[j], list) and "." in self.data_loader.props_dict[j][i]:
-                    item = sorted_list[0]
+        print("right wall sorted_list", sorted_list)
 
-                    if a[j][0] == -1:
-                        a[j] = item[0]
-                    else:
-                        a[j] = "/".join(["矩框", item[0]])
-                        print(a[j])
+        for i in range(len(self.data_loader.result_pd.index)):
+            a = self.data_loader.result_pd.loc[i]
+            for j in range(int(len(self.data_loader.result_pd.loc[0])/2), len(self.data_loader.result_pd.loc[0])):
+                self.modify_sort_wall(a, i, j, sorted_list)
 
-                    item[1]["count"] -= 1
-                    if item[1]["count"] < 1:
-                        sorted_list.remove(item)
-        print("sorted_list", sorted_list)
+        print("right wall sorted_list", sorted_list)
+
+    def reassign_prop(self):
+        clothing_prop_dict = dict()
+        prop_clothing_dict = dict()
+        for i in range(len(self.data_loader.result_pd.index)):
+            for j in range(len(self.data_loader.result_pd.loc[i])):
+                if i in self.data_loader.props_dict and j in self.data_loader.props_dict[i] and \
+                        ":" in self.data_loader.props_dict[i][j]:
+                    if isinstance(self.data_loader.result_pd.loc[i][j], list):
+                        clothing_name = str(self.data_loader.result_pd.loc[i][j][0]).split(":")[0]
+                        props_name = self.data_loader.props_dict[i][j][":"]
+                        if clothing_name not in clothing_prop_dict:
+                            clothing_prop_dict[clothing_name] = dict()
+                        if props_name not in clothing_prop_dict[clothing_name]:
+                            clothing_prop_dict[clothing_name][props_name] = list()
+                        clothing_prop_dict[clothing_name][props_name].append([i, j])
+                        if props_name not in prop_clothing_dict:
+                            prop_clothing_dict[props_name] = dict()
+                        if clothing_name not in prop_clothing_dict[props_name]:
+                            prop_clothing_dict[props_name][clothing_name] = list()
+                        prop_clothing_dict[props_name][clothing_name].append([i, j])
+        for clothing_name in clothing_prop_dict:
+            if len(clothing_prop_dict[clothing_name]) > 0:
+                prop = None
+                max_count = None
+                for key, value in clothing_prop_dict[clothing_name].items():
+                    if prop is None:
+                        prop = key
+                        max_count = len(value)
+                    elif max_count < len(value):
+                        prop = key
+                        max_count = len(value)
+                for key, value in clothing_prop_dict[clothing_name].items():
+                    if key == prop:
+                        continue
+                    for position in value:
+                        for i in range(max(position[0]-3, 0), min(position[0]+3, len(self.data_loader.result_pd.loc[0]))):
+                            for j in range(max(position[1] - 3, 0), min(position[1] + 3, len(self.data_loader.result_pd[0]))):
+                                if i in self.data_loader.props_dict and j in self.data_loader.props_dict[i] and ":" in self.data_loader.props_dict[i][j]:
+                                    if self.data_loader.props_dict[i][j][":"] != self.data_loader.props_dict[position[0]][position[1]][":"]:
+                                        continue
+                                    name = None
+                                    if isinstance(self.data_loader.result_pd.loc[i][j], list):
+                                        name = self.data_loader.result_pd.loc[i][j][0]
+                                    elif str(self.data_loader.result_pd.loc[i][j]).find(":") != -1:
+                                        name = str(self.data_loader.result_pd.loc[i][j])
+                                    if name is not None:
+                                        self.data_loader.result_pd.at[(position[0], position[1])] = name
 
 
 if __name__ == "__main__":
@@ -1011,5 +1041,5 @@ if __name__ == "__main__":
     print(os.listdir(root_path))
     # exit()
     # ['西充.csv', '仁寿.csv', '高县.csv', '泸州.csv', '阆中.csv', '富顺.csv', '大英.csv', '雅安.csv', '绵阳.csv', '资阳.csv']
-    for file_path in ['西充.csv', '仁寿.csv', '高县.csv', '泸州.csv', '阆中.csv', '富顺.csv', '大英.csv', '雅安.csv', '绵阳.csv', '资阳.csv']:
+    for file_path in ['西充.csv']:
         layout.layout(os.path.join(root_path, file_path), plan_path, CONTEXT_DICT)
