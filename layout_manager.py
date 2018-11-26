@@ -166,8 +166,8 @@ class LayoutManager(object):
                     else:
                         self.shop_property_dict[self.Women_island_suite_str] += 1
 
-        # for i in self.shop_property_dict:
-        #     print(i, self.shop_property_dict[i])
+        for i in self.shop_property_dict:
+            print(i, self.shop_property_dict[i])
 
     def section_choose(self, position, result_pd):
         # print("position", position)
@@ -381,8 +381,12 @@ class LayoutManager(object):
 
             # 分配墙面指标
             ready = False
-            display_clothing_list.sort(key=lambda a: (5-a[DataLoader.Importance_str])*100 + 10**10 if 4*a[
-                "count"] - sum(a[DataLoader.Style_count_str]) < 0 else sum(a[DataLoader.Style_count_str])-4*a["count"])
+            display_clothing_list.sort(key=lambda a: (5-a[DataLoader.Importance_str])*100 + 10**5 if 4*a[
+                "count"] - sum(a[DataLoader.Style_count_str]) < 0 else 200*(sum(a[DataLoader.Style_count_str])-4*a["count"]),
+                                       reverse=True)
+            # for i in [0, 1, 2, 3, 4]:
+            #     a = display_clothing_list[i]
+            #     print("fucked", a["name"], a[DataLoader.Style_count_str], a["count"], a[DataLoader.Importance_str], )
             for i in display_clothing_list:
 
                 can_use = False
@@ -423,6 +427,7 @@ class LayoutManager(object):
             # 满配额，在分配 指标
             if ready is False:
                 for i in display_clothing_list:
+                    # print("sorted", i["name"], i[DataLoader.Style_count_str], i["count"], i[DataLoader.Importance_str])
                     can_use = False
                     count = 0
                     if i[self.Women_wall_pants_str] > 0 and plan[self.Women_wall_pants_str] > 0:
@@ -476,7 +481,7 @@ class LayoutManager(object):
                             a = display_clothing_list[i]
 
                             a["sort_important"] += 1
-                            # print("recurrent", a["name"], a["count"], a["threshold_value"])
+                            # print("recurrent", a["name"], a["count"], a["threshold_value"], clothing_property)
                             a["count"] += 1
                             plan[clothing_property] -= 1
                             a["threshold_value"] -= 1
@@ -861,10 +866,11 @@ class LayoutManager(object):
                         # a[j] = [item[0].split(":")[0]+":"+a[j][1], item[1], item[2]]
                         break
 
-    def modify_need_sort_wall(self, i, sorted_dict):
+    def modify_need_sort_wall(self, i, sorted_dict, sex):
         a = self.data_loader.result_pd[i]
         for j in range(len(a)):
-            if isinstance(a[j], list) and "." in self.data_loader.props_dict[j][i]:
+            if isinstance(a[j], list) and "." in self.data_loader.props_dict[j][i] and \
+                    self.data_loader.bit_map[j][i]["sex"] == sex:
                 if str(a[j][0]) == "矩框":
                     continue
                 clothing = a[j][0].split("/")[0]
@@ -883,9 +889,12 @@ class LayoutManager(object):
                     self.data_loader.result_pd.at[j, i] = [-1]
                     # a[j] = [-1]
 
-    def modify_sort_wall(self, a, i, j, sorted_list):
-        if isinstance(a[j], list) and "." in self.data_loader.props_dict[i][j]:
+    def modify_sort_wall(self, a, i, j, sorted_list, sex):
+        # print("skksksksk")
+        if isinstance(a[j], list) and "." in self.data_loader.props_dict[i][j] and \
+                self.data_loader.bit_map[i][j]["sex"] == sex:
             item = sorted_list[0]
+            # print("why", item["name"])
 
             if a[j][0] == -1:
                 self.data_loader.result_pd.at[i, j] = item[0]
@@ -897,6 +906,25 @@ class LayoutManager(object):
             if item[1]["count"] < 1:
                 sorted_list.remove(item)
 
+    def get_left_wall_sex(self):
+        left_man = 0
+        left_woman = 0
+        for i in range(0, int(len(self.data_loader.result_pd.loc[0]) / 2)):
+            a = self.data_loader.result_pd[i]
+            for j in range(len(a)):
+                if j in self.data_loader.bit_map and i in self.data_loader.bit_map[j] and j \
+                        in self.data_loader.props_dict and i in self.data_loader.props_dict[j] and \
+                        "." in self.data_loader.props_dict[j][i]:
+                    if self.data_loader.bit_map[j][i]["sex"] == 1:
+                        left_man += 1
+                    else:
+                        left_woman += 1
+        if left_man > left_woman:
+            print("man wall")
+            return 1
+        print("woman wall")
+        return 0
+
     def resort(self):
 
         # men island sort
@@ -906,8 +934,9 @@ class LayoutManager(object):
 
         # left wall
         sorted_dict = dict()
-        for i in range(0, int(len(self.data_loader.result_pd.loc[0])/2)):
-            self.modify_need_sort_wall(i, sorted_dict)
+        left_wall_sex = self.get_left_wall_sex()
+        for i in range(0, len(self.data_loader.result_pd.loc[0])):
+            self.modify_need_sort_wall(i, sorted_dict, left_wall_sex)
 
         sorted_list = list(sorted_dict.items())
         sorted_list.sort(key=lambda a: a[1]["score"] + [10000 if "上衣" in a[1]["category"] else 0][0])
@@ -916,14 +945,14 @@ class LayoutManager(object):
 
         for i in range(len(self.data_loader.result_pd.index)):
             a = self.data_loader.result_pd.loc[i]
-            for j in range(int(len(self.data_loader.result_pd.loc[0])/2)-1, -1, -1):
-                self.modify_sort_wall(a, i, j, sorted_list)
+            for j in range(len(self.data_loader.result_pd.loc[0]) - 1, -1, -1):
+                self.modify_sort_wall(a, i, j, sorted_list, left_wall_sex)
         # print("left wall sorted_list", sorted_list)
 
         # right wall
         sorted_dict = dict()
-        for i in range(int(len(self.data_loader.result_pd.loc[0]) / 2), len(self.data_loader.result_pd.loc[0])):
-            self.modify_need_sort_wall(i, sorted_dict)
+        for i in range(len(self.data_loader.result_pd.loc[0])):
+            self.modify_need_sort_wall(i, sorted_dict, 1-left_wall_sex)
 
         sorted_list = list(sorted_dict.items())
         sorted_list.sort(key=lambda a: a[1]["score"] + [10000 if "上衣" in a[1]["category"] else 0][0])
@@ -932,8 +961,8 @@ class LayoutManager(object):
 
         for i in range(len(self.data_loader.result_pd.index)):
             a = self.data_loader.result_pd.loc[i]
-            for j in range(int(len(self.data_loader.result_pd.loc[0])/2), len(self.data_loader.result_pd.loc[0])):
-                self.modify_sort_wall(a, i, j, sorted_list)
+            for j in range(len(self.data_loader.result_pd.loc[0])):
+                self.modify_sort_wall(a, i, j, sorted_list, 1-left_wall_sex)
 
         # print("right wall sorted_list", sorted_list)
 
